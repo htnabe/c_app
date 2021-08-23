@@ -3,6 +3,16 @@ import { SafeAreaView ,StyleSheet ,Button, View, Text ,TextInput, } from 'react-
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Table, Row, Rows,TableWrapper, Col  } from 'react-native-table-component';
+import d_1 from './教育.json'; 
+import d_2 from './教育学.json'; 
+import d_3 from './教育学 (教職).json'; 
+import d_4 from './教養教育.json'; 
+import d_5 from './自然科学.json'; 
+import d_6 from './人間科学.json'; 
+import d_7 from './人間社会科学.json'; 
+import d_8 from './生物資源.json'; 
+import d_9 from './総合理工 (博士後期) .json'; 
+import d_10 from './法文.json'; 
 
 
 //時間割管理ホーム画面
@@ -100,32 +110,32 @@ function ClasstapScreen({ navigation }) {
     <SafeAreaView style={styles.container} >
 
       <View style={styles.c_component}>
-        <Text>講義名</Text>
-        <Text>微生物実験</Text>
+        <Text style={{fontSize:30}}>講義名</Text>
+        <Text style={{fontSize:30}}>微生物実験</Text>
       </View>
 
       <View style={styles.c_component}>
-        <Text>担当者名</Text>
-        <Text>島根太郎</Text>
+        <Text style={{fontSize:30}}>担当者名</Text>
+        <Text style={{fontSize:30}}>島根太郎</Text>
       </View>
 
       <View style={styles.c_component}>
-        <Text>曜日</Text>
-        <Text>月1・月2</Text>
+        <Text style={{fontSize:30}}>曜日</Text>
+        <Text style={{fontSize:30}}>月1・月2</Text>
       </View>
 
       <View style={styles.c_component}>
-        <Text>時限</Text>
-        <Text>1・2</Text>
+        <Text style={{fontSize:30}}>時限</Text>
+        <Text style={{fontSize:30}}>1・2</Text>
       </View>
 
-      <View style={{fontWeight:'bold'}}>
-        <Text>a</Text>
-        <Text>大学ホール</Text>
+      <View style={styles.c_component}>
+        <Text style={{fontSize:30}}>教室</Text>
+        <Text style={{fontSize:30}}>大学ホール</Text>
       </View>
 
       <View style={{width:'100%',flex: 1,alignItems:'center'}}>
-        <View style={{flex: 1,width:"70%", borderWidth:2,borderColor: "black",backgroundColor:"#d7e0ff",borderRadius:10, padding:10}} >
+        <View style={{flex: 1,width:"30%", borderWidth:2,borderColor: "black",backgroundColor:"#d7e0ff",borderRadius:10, padding:10,justifyContent:'center'}} >
           <Button title='追加' onPress={() => navigation.navigate('Search_Screen')} />
         </View>
       </View>
@@ -133,7 +143,6 @@ function ClasstapScreen({ navigation }) {
     </SafeAreaView>
   );
 }
-
 
 const Stack = createNativeStackNavigator();
 
@@ -221,10 +230,9 @@ const styles = StyleSheet.create({
   c_component: {
     justifyContent:'center',
     alignItems:'center',
-    fontSize:30,
-    marginVertical:10,
-  }
-
+    marginVertical:25,
+    flex:1,
+  },
 });
 
 export default App;
