@@ -1,8 +1,11 @@
-import * as React from 'react';
+import  React,  { useState } from 'react';
 import { SafeAreaView ,StyleSheet ,Button, View, Text ,TextInput, Modal, TouchableOpacity, Animated, Dimensions} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Table, Row, Rows,TableWrapper, Col  } from 'react-native-table-component';
+import { inputGakubudeta, saveGakubuname } from './holddeta/savedeta'
+import { Gakubuname } from './holddeta/savedeta'
+import { readdeta } from './holddeta/readdeta';
 import d_1 from './assets/firstSemisterLecs/教育.json'; 
 import d_2 from './assets/firstSemisterLecs/教育学.json'; 
 import d_3 from './assets/firstSemisterLecs/教育学（教職）.json'; 
@@ -16,34 +19,33 @@ import d_10 from './assets/firstSemisterLecs/総合理工（博士後期）.json
 import d_11 from './assets/firstSemisterLecs/法文.json';
 
 
-//JSONからデータをまとめる関数
-const makeClassdeta= ({}) => {
+//JSONからデータをまとめる関数、まとめて使う、データを単体で使う！
+const MakeClassdeta= ({}) => {
 
-   const class_1 = JSON.parse(d_1);
-   const class_2 = JSON.parse(d_2);
-   const class_3 = JSON.parse(d_3);
-   const class_4 = JSON.parse(d_4);
-   const class_5 = JSON.parse(d_5);
-   const class_6 = JSON.parse(d_6);
-   const class_7 = JSON.parse(d_7);
-   const class_8 = JSON.parse(d_8);
-   const class_9 = JSON.parse(d_9);
-   const class_10 = JSON.parse(d_10);
-   const class_11 = JSON.parse(d_11);
+   const class_1 = JSON.parse(d_1);  //教育
+   const class_2 = JSON.parse(d_2);  //教育学
+   const class_3 = JSON.parse(d_3);  //教育学(教職)
+   const class_4 = JSON.parse(d_4);  //教養教育
+   const class_5 = JSON.parse(d_5);  //自然科学
+   const class_6 = JSON.parse(d_6);  //人間科学
+   const class_7 = JSON.parse(d_7);  //人間社会科学
+   const class_8 = JSON.parse(d_8);  //生物資源
+   const class_9 = JSON.parse(d_9);  //総合理工
+   const class_10 = JSON.parse(d_10);  //総合理工(博士後期)
+   const class_11 = JSON.parse(d_11);  //法文
 
-   
 
 }
 
 
-//画面サイズ取得 ←なんかできない？？
+//画面サイズ取得 ←なんかできない、保留、
 var {HEIGHT, WIDTH} = Dimensions.get('window');
-console.log(HEIGHT,WIDTH);
+//console.log(HEIGHT,WIDTH);
 
-//ポップアップ画面
+//ポップアップ画面  
 const Modalpoup = ({visible, children}) => {
 
-  const [showmodal, setshowmodal] = React.useState(visible);
+  const [showmodal, setshowmodal] = useState(visible);
   const scalevalue = React.useRef(new Animated.Value(0)).current;
 
   React.useEffect(() => {
@@ -58,7 +60,7 @@ const Modalpoup = ({visible, children}) => {
         useNativeDriver: true,
       }).start();
     }else{
-      setTimeout(() => setshowmodal(false),300); //モデルが閉じる前にアニメーションを実行
+      setTimeout(() => setshowmodal(false),300); //modalが閉じる前にアニメーションを実行
       Animated.spring(scalevalue, {
         tovalue: 0,
         duration: 500,
@@ -91,7 +93,36 @@ function HomeScreen({ navigation }) {
     ['1', '2', '3', '4','5'],
   ];
 
-  const [visible,setVisible] = React.useState(false);
+  //ポップアップ画面
+  const [visible,setVisible] = useState(false);
+
+  //学部名保存
+  const [Gakubutext, setGakubuname] = useState("");
+  const Gakubuname =() => {
+    alert(Gakubutext)
+    alert('ポイント１')
+    setGakubuname(Gakubutext)
+
+    if (Gakubutext) {
+      saveGakubuname(Gakubutext)
+      alert('deta saved')
+    }else {
+      alert('error2')
+    }
+
+  }
+
+  //学部入力(true false)保存
+  const [displayPoup, setPoup] = useState(true);
+  const getgakubu = () => {
+    setPoup(false)
+    inputGakubudeta(displayPoup)
+    Gakubuname()
+  }
+
+
+
+
 
   return (
     <SafeAreaView style={styles.container} >
@@ -117,18 +148,23 @@ function HomeScreen({ navigation }) {
 
       <View style={styles.bottom}>
         <View>
+          {/* ポップアップ画面 */}
           <Modalpoup visible = {visible}>
             <View style={{alignItems:'center'}}>
-              <View style={styles.modalheader}>
+              
+                {/* ポップアップ画面終了 */}
+                <TouchableOpacity  style={styles.modalbtn_1} >
+                  <Button title="閉じる" onPress={() => setVisible(false)}/>
+                </TouchableOpacity>
+                
+                <Text　style={{fontSize:20, marginVertical:20, fontWeight:'bold'}}>所属する学部を入力してください</Text>      
+                <TextInput style={styles.popuptext} placeholder="例　生物資源科学部"  ></TextInput>
 
-                <TouchableOpacity>
-                  <Button title="入力完了" onPress={() => setVisible(false)}/>
+                {/* 学部名保存関数(setPoup)実行 */}
+                <TouchableOpacity style={styles.decidebutton}>
+                  <Text style={styles.decidebtntext} onPress={() => getgakubu()}>学部決定</Text>
                 </TouchableOpacity>
 
-                <Text　style={{fontSize:20, marginVertical:20, fontWeight:'bold'}}>所属する学部を入力してください</Text>      
-                <TextInput style={styles.popuptext} placeholder="例　生物資源科学部"></TextInput>
-
-              </View>
             </View>
           </Modalpoup>
           <Button title="ポップアップ" onPress={() => setVisible(true)}/>
@@ -137,6 +173,7 @@ function HomeScreen({ navigation }) {
         <View style={styles.buttoncontainer}>
           <Button title="編集" onPress={() => navigation.navigate('')}/>
         </View>
+
       </View>
 
     </SafeAreaView>
@@ -209,6 +246,7 @@ function ClasstapScreen({ navigation }) {
 
       <View style={styles.c_component}>
         <Text style={{fontSize:30}}>時限</Text>
+
         <Text style={{fontSize:30}}>1・2</Text>
       </View>
 
@@ -337,7 +375,6 @@ const styles = StyleSheet.create({
     width:"100%",
     alignItems:'center',
     justifyContent:"center",
-
   },
   popuptext: {
     backgroundColor:'#d7e0ff',
@@ -347,6 +384,32 @@ const styles = StyleSheet.create({
     fontSize:25,
     color:'black',
   },
+  modalbtn_1: {
+    width:"30%",
+    alignItems:'center',
+    justifyContent:'center',
+    backgroundColor:'#d7e0ff',
+    borderWidth:2,
+    borderColor: "black",
+    borderRadius:10,
+  },
+  decidebutton: {
+    marginTop:20,
+    width:"40%",
+    alignItems:'center',
+    justifyContent:"center",
+    borderWidth:2,
+    borderColor: "red",
+    borderRadius:10,
+    backgroundColor:'white',
+  },
+  decidebtntext: {
+    fontSize:20,
+    color: 'red',
+    paddingVertical:10,
+    fontWeight:'bold'
+  }
+
 });
 
 export default App;
