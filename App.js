@@ -1,10 +1,9 @@
 import  React,  { useState } from 'react';
-import { SafeAreaView ,StyleSheet ,Button, View, Text ,TextInput, Modal, TouchableOpacity, Animated, Dimensions} from 'react-native';
+import { SafeAreaView ,StyleSheet ,Button, View, Text ,TextInput, Modal, TouchableOpacity, Animated, Dimensions, Alert} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Table, Row, Rows,TableWrapper, Col  } from 'react-native-table-component';
-import { inputGakubudeta, saveGakubuname } from './holddeta/savedeta'
-import { Gakubuname } from './holddeta/savedeta'
+import { inputGakubudeta, saveGakubuname } from './holddeta/savedeta';
 import { readdeta } from './holddeta/readdeta';
 import d_1 from './assets/firstSemisterLecs/教育.json'; 
 import d_2 from './assets/firstSemisterLecs/教育学.json'; 
@@ -17,6 +16,11 @@ import d_8 from './assets/firstSemisterLecs/生物資源.json';
 import d_9 from './assets/firstSemisterLecs/総合理工.json'; 
 import d_10 from './assets/firstSemisterLecs/総合理工（博士後期）.json';
 import d_11 from './assets/firstSemisterLecs/法文.json';
+
+
+//画面サイズ取得 ←保留
+var {HEIGHT, WIDTH} = Dimensions.get('window');
+//console.log(HEIGHT,WIDTH);
 
 
 //JSONからデータをまとめる関数、まとめて使う、データを単体で使う！
@@ -37,10 +41,6 @@ const MakeClassdeta= ({}) => {
 
 }
 
-
-//画面サイズ取得 ←なんかできない、保留、
-var {HEIGHT, WIDTH} = Dimensions.get('window');
-//console.log(HEIGHT,WIDTH);
 
 //ポップアップ画面  
 const Modalpoup = ({visible, children}) => {
@@ -83,6 +83,52 @@ const Modalpoup = ({visible, children}) => {
 //時間割管理ホーム画面
 function HomeScreen({ navigation }) {
 
+  //inputtext
+  const [gakubuvalue, onChangeText] = useState("島根学部");
+
+  //学部名保存
+  const [Gakubutext, setGakubuname] = useState("");
+
+  //学部入力(true false)保存
+  const [displayPoup, setPoup] = useState(true);
+  const getgakubu = () => {
+    setGakubuname(gakubuvalue)
+
+    setPoup(false)
+    inputGakubudeta(displayPoup)
+  }
+
+  //ポップアップ画面
+  const [visible,setVisible] = useState(false);
+
+  //ポップアップ終了+学部名保存
+  const closepop =() => {
+
+    try {
+      saveGakubuname(Gakubutext)
+      setVisible(false)
+
+    }catch(er) {
+      alert(er)
+    }
+  } 
+
+  //ポップアップ画面表示切り替え
+  let [co,setco] = useState(0);
+  if(co == 0) {
+    setco(1)
+    alert(
+      'はじめまして',
+      'まずは所属学部を登録しましょう',
+      [
+        {text: '所属学部を選ぶ', onPress: () => setVisible(true)},
+      ],
+      //{ cancelable: false }
+    )
+    //alert(visible)
+  }
+
+
   const H_tableHead = ['','月', '火', '水', '木','金'];
   const H_tabletitle = ['1限', '2限', '3限', '4限','5限'];
   const H_tableData = [
@@ -92,36 +138,6 @@ function HomeScreen({ navigation }) {
     ['1', '2', '3', '4','5'],
     ['1', '2', '3', '4','5'],
   ];
-
-  //ポップアップ画面
-  const [visible,setVisible] = useState(false);
-
-  //学部名保存
-  const [Gakubutext, setGakubuname] = useState("");
-  const Gakubuname =() => {
-    alert(Gakubutext)
-    alert('ポイント１')
-    setGakubuname(Gakubutext)
-
-    if (Gakubutext) {
-      saveGakubuname(Gakubutext)
-      alert('deta saved')
-    }else {
-      alert('error2')
-    }
-
-  }
-
-  //学部入力(true false)保存
-  const [displayPoup, setPoup] = useState(true);
-  const getgakubu = () => {
-    setPoup(false)
-    inputGakubudeta(displayPoup)
-    Gakubuname()
-  }
-
-
-
 
 
   return (
@@ -154,11 +170,12 @@ function HomeScreen({ navigation }) {
               
                 {/* ポップアップ画面終了 */}
                 <TouchableOpacity  style={styles.modalbtn_1} >
-                  <Button title="閉じる" onPress={() => setVisible(false)}/>
+                  <Button title="閉じる" onPress={() => closepop()}/>
                 </TouchableOpacity>
                 
-                <Text　style={{fontSize:20, marginVertical:20, fontWeight:'bold'}}>所属する学部を入力してください</Text>      
-                <TextInput style={styles.popuptext} placeholder="例　生物資源科学部"  ></TextInput>
+                <Text style={{fontSize:20, marginVertical:20, fontWeight:'bold'}}>所属する学部を入力してください</Text>      
+                <TextInput style={styles.popuptext} onChangeText={text => onChangeText(text)} value={gakubuvalue} ></TextInput>
+                
 
                 {/* 学部名保存関数(setPoup)実行 */}
                 <TouchableOpacity style={styles.decidebutton}>
@@ -167,13 +184,14 @@ function HomeScreen({ navigation }) {
 
             </View>
           </Modalpoup>
-          <Button title="ポップアップ" onPress={() => setVisible(true)}/>
         </View>
 
-        <View style={styles.buttoncontainer}>
-          <Button title="編集" onPress={() => navigation.navigate('')}/>
+        <View style={styles.bottom_horizen}>
+          <Text style={styles.buttomtext}>{gakubuvalue}</Text>
+          <View style={styles.buttonsita}>
+            <Button title="編集" onPress={() => alert('まだ未設定です')}/>
+          </View>
         </View>
-
       </View>
 
     </SafeAreaView>
@@ -181,7 +199,7 @@ function HomeScreen({ navigation }) {
 }
 
 //検索結果表示画面
-function SearchScreen({ navigation }) {
+export function SearchScreen({ navigation }) {
 
   const K_tableHead = ['','講義名', '担当者名', '追加'];
   const K_tabletitle = ['1', '2', '3', '4','5'];
@@ -195,6 +213,10 @@ function SearchScreen({ navigation }) {
   
   return (
     <SafeAreaView style={styles.container}>
+
+        
+
+          {/* <Checkbox value={box_1_value} onChange={() => setCvlaue(true)}></Checkbox> */}
 
 
           <View style={{flex:7,backgroundColor:"#fff",width:"100%"}}>
@@ -223,9 +245,8 @@ function SearchScreen({ navigation }) {
   );
 }
 
-
 //講義名をタップ画面
-function ClasstapScreen({ navigation }) {
+export function ClasstapScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container} >
 
@@ -304,8 +325,8 @@ const styles = StyleSheet.create({
     width: "100%",
     flex:1,
     backgroundColor: "#fff",
-    justifyContent:'flex-start',
-    alignItems:'flex-end',
+    justifyContent:'space-around',
+    alignItems: 'center',
   },
   input: {
     color:'black',
@@ -317,10 +338,6 @@ const styles = StyleSheet.create({
     padding:12,
     marginTop:10
   },
-  boldtext: {
-    fontWeight: 'bold',
-    fontSize: 30,
-  },
   buttoncontainer: {
     width: "30%",
     height: "60%",
@@ -330,6 +347,103 @@ const styles = StyleSheet.create({
     borderRadius:10,
     padding:5,
     marginTop:10,
+    justifyContent:'flex-end'
+  },
+  tablewrapper: {
+     flexDirection: 'row' ,
+  },
+  tabletitle: {
+     backgroundColor: '#d7e0ff',
+  },
+  table_dtext: {
+    fontSize:25,
+    paddingVertical:30,
+    textAlign: 'center',
+    fontWeight: 'bold'
+  },
+  table_itext: {
+    fontSize:23,
+    paddingVertical:35,
+    textAlign: 'center'
+  },
+  modalbacground: {
+    flex:1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent:'center',
+    alignItems:'center',
+  },
+  modalcontainer: {
+    width:'80%',
+    backgroundColor: 'white',
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+    borderRadius: 20,
+    elevation:20,
+  },
+  modalbtn_1: {
+    width:"30%",
+    alignItems:'center',
+    justifyContent:'center',
+    backgroundColor:'#d7e0ff',
+    borderWidth:2,
+    borderColor: "black",
+    borderRadius:10,
+  },
+  decidebutton: {
+    marginTop:20,
+    width:"40%",
+    alignItems:'center',
+    justifyContent:"center",
+    borderWidth:2,
+    borderColor: "red",
+    borderRadius:10,
+    backgroundColor:'white',
+  },
+  decidebtntext: {
+    fontSize:20,
+    color: 'red',
+    paddingVertical:10,
+    fontWeight:'bold'
+  },
+  popuptext: {
+    width:'80%',
+    marginVertical: 20,
+    borderRadius: 10,
+    borderColor:'black',
+    borderWidth:2,
+    backgroundColor:'#d7e0ff',
+    paddingVertical:20,
+    fontSize:20,
+  },
+  bottom_horizen: {
+    flexDirection: 'row',
+    width:'100%',
+    height:'60%',
+  },
+  buttomtext: {
+    color:'black',
+    fontWeight:'bold',
+    fontSize: 20,
+    borderWidth:2,
+    borderColor:'black',
+    backgroundColor:'#d7e0ff',
+    borderRadius: 10,
+    padding:5,
+    marginLeft: 40,
+    marginRight: 100,
+    
+  },
+  buttonsita: {
+    backgroundColor:'#d7e0ff',
+    borderRadius: 10,
+    borderColor:'black',
+    borderWidth:2,
+  },
+  tableall: {
+    width: "100%",
+    flex:8,
+    paddingTop: 10, 
+    backgroundColor: '#fff',
   },
   tablehead: {
     backgroundColor: 'red'
@@ -357,60 +471,7 @@ const styles = StyleSheet.create({
     marginVertical:25,
     flex:1,
   },
-  modalbacground: {
-    flex:1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent:'center',
-    alignItems:'center',
-  },
-  modalcontainer: {
-    width:'80%',
-    backgroundColor: 'white',
-    paddingHorizontal: 20,
-    paddingVertical: 30,
-    borderRadius: 20,
-    elevation:20,
-  },
-  modalheader: {
-    width:"100%",
-    alignItems:'center',
-    justifyContent:"center",
-  },
-  popuptext: {
-    backgroundColor:'#d7e0ff',
-    width:"80%",
-    paddingVertical:10,
-    borderWidth:2,
-    fontSize:25,
-    color:'black',
-  },
-  modalbtn_1: {
-    width:"30%",
-    alignItems:'center',
-    justifyContent:'center',
-    backgroundColor:'#d7e0ff',
-    borderWidth:2,
-    borderColor: "black",
-    borderRadius:10,
-  },
-  decidebutton: {
-    marginTop:20,
-    width:"40%",
-    alignItems:'center',
-    justifyContent:"center",
-    borderWidth:2,
-    borderColor: "red",
-    borderRadius:10,
-    backgroundColor:'white',
-  },
-  decidebtntext: {
-    fontSize:20,
-    color: 'red',
-    paddingVertical:10,
-    fontWeight:'bold'
-  }
 
 });
 
 export default App;
-

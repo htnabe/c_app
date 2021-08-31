@@ -24,7 +24,7 @@ export async function saveGakubuname(dp) {
   try {
 
     let stringdp = String(dp);
-    alert(dp)
+    //alert(dp)
     await AsyncStorage.setItem('Gakubuname', stringdp);
     alert('保存成功')
 
