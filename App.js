@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Table, Row, Rows,TableWrapper, Col  } from 'react-native-table-component';
 import { inputGakubudeta, saveGakubuname } from './holddeta/savedeta';
 import { readdeta } from './holddeta/readdeta';
+//import {SearchScreen} from './seachscreen';
 import d_1 from './assets/firstSemisterLecs/教育.json'; 
 import d_2 from './assets/firstSemisterLecs/教育学.json'; 
 import d_3 from './assets/firstSemisterLecs/教育学（教職）.json'; 
@@ -117,7 +118,7 @@ function HomeScreen({ navigation }) {
   let [co,setco] = useState(0);
   if(co == 0) {
     setco(1)
-    alert(
+    Alert.alert(
       'はじめまして',
       'まずは所属学部を登録しましょう',
       [
@@ -125,7 +126,7 @@ function HomeScreen({ navigation }) {
       ],
       //{ cancelable: false }
     )
-    //alert(visible)
+    
   }
 
 
@@ -198,8 +199,9 @@ function HomeScreen({ navigation }) {
   );
 }
 
+
 //検索結果表示画面
-export function SearchScreen({ navigation }) {
+function SearchScreen({ navigation }) {
 
   const K_tableHead = ['','講義名', '担当者名', '追加'];
   const K_tabletitle = ['1', '2', '3', '4','5'];
@@ -245,8 +247,10 @@ export function SearchScreen({ navigation }) {
   );
 }
 
+
+
 //講義名をタップ画面
-export function ClasstapScreen({ navigation }) {
+function ClasstapScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container} >
 
@@ -286,6 +290,12 @@ export function ClasstapScreen({ navigation }) {
   );
 }
 
+
+//{  
+    //Home_Screen: { screen: HomeScreen },
+  　//Search_Screen: {screen: SearchScreen},
+    //Classtap_Screen: {screen: ClasstapScreen}
+  //},
 const Stack = createNativeStackNavigator();
 
 function App() {
