@@ -1,9 +1,11 @@
 import  React,  { useState } from 'react';
-import { SafeAreaView ,StyleSheet ,Button, View, Text ,TextInput, Modal, TouchableOpacity, Animated, Dimensions, Alert} from 'react-native';
+import { SafeAreaView ,StyleSheet ,Button, View, Text ,TextInput, TouchableOpacity, FlatList, Alert, TouchableHighlight} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Table, Row, Rows,TableWrapper, Col  } from 'react-native-table-component';
 import { inputGakubudeta, saveGakubuName } from './holddeta/savedeta';
+//import { searchScreen } from './seachscreen';
+//import { classTapScreen } from './classScreen';
 import { readdeta } from './holddeta/readdeta';
 import { AirbnbRating } from 'react-native-elements';
 
@@ -146,7 +148,7 @@ function HomeScreen({ navigation }) {
           <TextInput style={styles.input} placeholder="授業科目検索部分"></TextInput>
         </View>
         <View style={styles.buttoncontainer}>
-          <Button title="検索" onPress={() => navigation.navigate('Search_Screen')}/>
+          <Button title="検索" onPress={() => navigation.navigate('search_Screen')}/>
         </View>
       </View>
 
@@ -171,94 +173,93 @@ function HomeScreen({ navigation }) {
   );
 }
 
+//検索結果表示
+const d1_Data = require('./assets/firstSemisterLecs/教育.json');
 
-//検索結果表示画面
-function SearchScreen({ navigation }) {
+const Item = ({ 時間割所属, 科目, 担当}) => (
+  <View style={styles.itemSearch}>
+    <Text style={styles.id}>{時間割所属}</Text>
+    <Text style={styles.title}>{科目}</Text>
+    <Text style={styles.teacher}>{担当}</Text>
+  </View>
+);
 
-  const K_tableHead = ['','講義名', '担当者名', '追加'];
-  const K_tabletitle = ['1', '2', '3', '4','5'];
-  const K_tableData = [
-    ['1', '2', '□'],
-    ['1', '2', '□'],
-    ['1', '2', '□'],
-    ['1', '2', '□'],
-    ['1', '2', '□'],
-  ];
+
+function searchScreen({navigation}) {
+
+    const renderItem = ({ item }) => (
+      <TouchableHighlight onPress={() => navigation.navigate("Classtap_Screen",item)} underlayColor={'red'}>
+          <Item 時間割所属={item.時間割所属} 科目={item.科目} 担当={item.担当}/>
+      </TouchableHighlight>
+    );
   
-  return (
-    <SafeAreaView style={styles.container}>
+    return (
+      <SafeAreaView style={styles.containerSearch}>
+
+        <View style={styles.searchHeader}>
+          <View style={styles.h1}>
+            <Text style={styles.headerText}>所属</Text>
+          </View>
+          <View style={styles.h2}>
+            <Text style={styles.headerText}>科目</Text>
+          </View>
+          <View style={styles.h3}>
+            <Text style={styles.headerText}>担当</Text>
+          </View>
+        </View>
+
+        <FlatList
+          data={d1_Data}
+          renderItem={renderItem}
+          keyExtractor={item => item.時間割コード}
+          style={styles.flatlist}
+        />
         
-          {/* <Checkbox value={box_1_value} onChange={() => setCvlaue(true)}></Checkbox> */}
-
-          <View style={{flex:7,backgroundColor:"#fff",width:"100%"}}>
-            <Table borderStyle={{borderWidth: 2, borderColor: 'black'}}>
-              <Row data={K_tableHead} textStyle={styles.table_dtext} flexArr={[1, 1.5, 1.5, 1]}/>
-              <TableWrapper style={styles.tablewrapper}>
-                <Col data={K_tabletitle} style={styles.tabletitle} textStyle={styles.table_dtext}/>
-                <Rows data={K_tableData} flexArr={[1.5, 1.5, 1]} textStyle={styles.table_itext}/>
-              </TableWrapper>
-            </Table>
-          </View>
-
-          <View style={styles.tuikabtn}>        
-              <Button title="追加" onPress={() => navigation.navigate('Home_Screen')} />
-          </View>
-          
-          <View style={{width:'100%',flex: 1,alignItems:'flex-end'}}> 
-            <View style={{flex: 1,width:"70%", borderColor: "black",backgroundColor:"#d7e0ff",borderRadius:10, padding:10}}>
-              <Button title="Classtap_screenへの遷移" onPress={() => navigation.navigate('Classtap_Screen')} />
-            </View>
-          </View>
-      
-    </SafeAreaView>
-  );
+      </SafeAreaView>
+    );
 }
 
-//講義名をタップ画面
-function ClasstapScreen({ navigation }) {
-
+//詳細画面
+function classTapScreen({route}){
+  const { 科目 }= route.params
+  const { 担当 }= route.params
+  const { 教室名 }= route.params
   return (
-    <SafeAreaView style={styles.container} >
-      <View style={styles.c_component}>
-        <Text style={styles.gakubuValueText}>講義名</Text>
-        <Text style={styles.gakubuValueText}>微生物実験</Text>
+    <View style={styles.containerClass}>
+      <View style={styles.classTapframe}>
+        <Text style={styles.classTapText}>講義名</Text>
+        <Text style={styles.classTapText}>{科目}</Text>
       </View>
-      <View style={styles.c_component}>
-        <Text style={styles.gakubuValueText}>担当者名</Text>
-        <Text style={styles.gakubuValueText}>島根太郎</Text>
+      <View style={styles.classTapframe}>
+        <Text style={styles.classTapText}>担当者名</Text>
+        <Text style={styles.classTapText}>{担当}</Text>
       </View>
-      <View style={styles.c_component}>
-        <Text style={styles.gakubuValueText}>曜日</Text>
-        <Text style={styles.gakubuValueText}>月1・月2</Text>
+      <View style={styles.classTapframe}>
+        <Text style={styles.classTapText}>曜日</Text>
+        <Text style={styles.classTapText}>エラー</Text>
       </View>
-      <View style={styles.c_component}>
-        <Text style={styles.gakubuValueText}>時限</Text>
-        <Text style={styles.gakubuValueText}>1・2</Text>
+      <View style={styles.classTapframe}>
+        <Text style={styles.classTapText}>時限</Text>
+        <Text style={styles.classTapText}>エラー</Text>
       </View>
-      <View style={styles.c_component}>
-        <Text style={styles.gakubuValueText}>教室</Text>
-        <Text style={styles.gakubuValueText}>大学ホール</Text>
+      <View style={styles.classTapframe}>
+        <Text style={styles.classTapText}>教室名</Text>
+        <Text style={styles.classTapText}>{教室名}</Text>
       </View>
-      <View style={styles.classtapBottom}>
-        <View style={styles.classtapbtn} >
-          <Button title='追加' onPress={() => navigation.navigate('Search_Screen')} />
-        </View>
-      </View>
-
-    </SafeAreaView>
+      {/* <Button title="追加" onPress={() => navigation.navigate('Home_Screen')}/> */}
+    </View>
   );
 }
 
 const Stack = createNativeStackNavigator();
 
 function App() {
-
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home_Screen">
         <Stack.Screen name="Home_Screen" component={HomeScreen} />
-        <Stack.Screen name="Search_Screen" component={SearchScreen} />
-        <Stack.Screen name="Classtap_Screen" component={ClasstapScreen} />
+        <Stack.Screen name="search_Screen" component={searchScreen} />
+        <Stack.Screen name="Classtap_Screen" component={classTapScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -460,6 +461,77 @@ const styles = StyleSheet.create({
   },
   gakubuValueText: {
     fontSize:30,
+  },
+  containerSearch: {
+    flex: 1,
+    //marginTop: StatusBar.currentHeight || 0,
+  },
+  itemSearch: {
+    backgroundColor: '#b0caf9',
+    padding: 20,
+    borderWidth:1,
+    borderColor:'black',
+    marginHorizontal: 1,
+    flexDirection:'row'
+  },
+  searchHeader: {
+    flexDirection:'row',
+  },
+  h1: {
+    width:'20%',
+    borderWidth:2,
+    borderColor:'black',
+    alignItems:'center',
+    justifyContent:'center',
+  },
+  h2: {
+    width:'50%',
+    borderWidth:2,
+    borderColor:'black',
+    alignItems:'center',
+    justifyContent:'center',
+  },
+  h3: {
+    width:'30%',
+    borderWidth:2,
+    borderColor:'black',
+    alignItems:'center',
+    justifyContent:'center',
+  },
+  headerText: {
+    marginVertical:10,
+    fontSize:20,
+    fontWeight:'bold',
+  },
+  id: {
+    fontSize:15,
+    fontWeight:'bold',
+    width:'20%',
+  },
+  title: {
+    fontSize: 15,
+    width:'55%',
+  },
+  teacher: {
+    fontSize:15,
+    width:'25%',
+  },
+  containerClass:{
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: "#ffffff",
+  },
+  classTapframe: {
+    marginVertical:20,
+    justifyContent:'center',
+    alignItems:'center',
+  },
+  classTapText: {
+    fontSize:30,
+    color:'black',
+    fontWeight:'bold',
+    marginVertical:5,
   }
 
 });

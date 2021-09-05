@@ -1,16 +1,25 @@
 import React from 'react';
-import AsyncStorage from 'react-native';
+import AsyncStorage, { Alert } from 'react-native';
 
 
 
 //データの読み出し
-export const readdeta = async () => {
+export async function readdeta() {
+  
     try {
-        const deta_r1 = await AsyncStorage.getItem(DATA);
-        if(deta_r1) {
-            this.setState({deta_r1: deta_r1});
-        }
-    } catch (e) {
-        //console.log(e2)
+      
+      const gbi = await AsyncStorage.getItem('GakubuInput');
+
+      if (gbi != null) {
+        return gbi;
+      }else{
+        return "";
+      }
+
+    } catch (error) {
+
+    　alert('エラー発生')
+      alert(error)
+      
     }
-}
+  }

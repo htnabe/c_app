@@ -20,7 +20,7 @@ export async function inputGakubudeta(dp) {
 
 //学部名データの保存
 export async function saveGakubuName(dp) {
-    alert('ポイント２')
+  
   try {
 
     let stringdp = String(dp);
