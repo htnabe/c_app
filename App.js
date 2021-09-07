@@ -220,7 +220,7 @@ function searchScreen({navigation}) {
 }
 
 //詳細画面
-function classTapScreen({route}){
+function classTapScreen({navigation, route}){
   const { 科目 }= route.params
   const { 担当 }= route.params
   const { 教室名 }= route.params
@@ -246,6 +246,9 @@ function classTapScreen({route}){
         <Text style={styles.classTapText}>教室名</Text>
         <Text style={styles.classTapText}>{教室名}</Text>
       </View>
+      <TouchableOpacity style={styles.homeBackbtnStyle} onPress={() => navigation.navigate('Home_Screen')}>
+        <Text style={styles.homeBackbtn}>追加</Text>
+      </TouchableOpacity>
       {/* <Button title="追加" onPress={() => navigation.navigate('Home_Screen')}/> */}
     </View>
   );
@@ -532,6 +535,17 @@ const styles = StyleSheet.create({
     color:'black',
     fontWeight:'bold',
     marginVertical:5,
+  },
+  homeBackbtnStyle: {
+    borderColor:'red',
+    borderWidth:5,
+    borderRadius:10,
+  },
+  homeBackbtn: {
+    padding:10,
+    fontSize:30,
+    color:'red',
+    fontWeight:'bold',
   }
 
 });
