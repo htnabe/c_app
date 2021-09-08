@@ -1,5 +1,5 @@
 import  React,  { useState } from 'react';
-import { SafeAreaView ,StyleSheet ,Button, View, Text ,TextInput, TouchableOpacity, FlatList, Alert, TouchableHighlight} from 'react-native';
+import { SafeAreaView ,StyleSheet ,Button, View, Text ,TextInput, TouchableOpacity, FlatList, Alert, TouchableHighlight, CheckBox} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Table, Row, Rows,TableWrapper, Col  } from 'react-native-table-component';
@@ -7,7 +7,7 @@ import { inputGakubudeta, saveGakubuName } from './holddeta/savedeta';
 //import { searchScreen } from './seachscreen';
 //import { classTapScreen } from './classScreen';
 import { readdeta } from './holddeta/readdeta';
-import { AirbnbRating } from 'react-native-elements';
+//import { CheckBox } from 'react-native-elements';
 
 
 //時間割管理ホーム画面
@@ -147,9 +147,11 @@ function HomeScreen({ navigation }) {
         <View>
           <TextInput style={styles.input} placeholder="授業科目検索部分"></TextInput>
         </View>
-        <View style={styles.buttoncontainer}>
-          <Button title="検索" onPress={() => navigation.navigate('search_Screen')}/>
-        </View>
+        
+        <TouchableOpacity style={styles.buttoncontainer} onPress={() => navigation.navigate('search_Screen')}>
+          <Text style={styles.kensakutext}>検索</Text>
+        </TouchableOpacity>
+        
       </View>
 
       <View style={styles.tableall}>
@@ -163,18 +165,20 @@ function HomeScreen({ navigation }) {
       </View>
 
         <View style={styles.bottom_horizen}>
-          <Text style={styles.buttomtext}>{gakubuValue}</Text>
-          <View style={styles.buttonsita}>
-            <Button title="編集" onPress={() => alert('まだ未設定です(登録学部の修正とかここでできるかも)')}/>
-          </View>
+          <Text style={styles.buttomwaku}>{gakubuValue}</Text>
+          <TouchableOpacity　style={styles.buttonsita} onPress={() => alert('まだ未設定です(登録学部の修正とかここでできるかも)')}>
+            <Text style ={styles.buttomtext}>編集</Text>
+          </TouchableOpacity>
         </View>
-
     </SafeAreaView>
   );
 }
 
 //検索結果表示
 const d1_Data = require('./assets/firstSemisterLecs/教育.json');
+
+//const [isSelected, setSelection] = useState(false);
+
 
 const Item = ({ 時間割所属, 科目, 担当}) => (
   <View style={styles.itemSearch}>
@@ -186,11 +190,15 @@ const Item = ({ 時間割所属, 科目, 担当}) => (
 
 
 function searchScreen({navigation}) {
+  
 
     const renderItem = ({ item }) => (
-      <TouchableHighlight onPress={() => navigation.navigate("Classtap_Screen",item)} underlayColor={'red'}>
+      <View>
+        <TouchableHighlight onPress={() => navigation.navigate("Classtap_Screen",item)} underlayColor={'red'}>
           <Item 時間割所属={item.時間割所属} 科目={item.科目} 担当={item.担当}/>
-      </TouchableHighlight>
+        </TouchableHighlight>
+        {/* <CheckBox value={isSelected} onValueChange={setSelection} style={styles.checkboxconatiner}/> */}
+      </View>
     );
   
     return (
@@ -206,6 +214,7 @@ function searchScreen({navigation}) {
           <View style={styles.h3}>
             <Text style={styles.headerText}>担当</Text>
           </View>
+          
         </View>
 
         <FlatList
@@ -313,7 +322,18 @@ const styles = StyleSheet.create({
     borderRadius:10,
     padding:5,
     marginTop:10,
-    justifyContent:'flex-end'
+    justifyContent:'center',
+    alignItems:'center',
+  },
+  kensakubtn: {
+    borderColor:'black',
+    borderWidth:2,
+    borderRadius:10,
+  },
+  kensakutext: {
+    fontSize:20,
+    padding:10,
+    fontWeight:'bold'
   },
   tablewrapper: {
      flexDirection: 'row' ,
@@ -386,7 +406,7 @@ const styles = StyleSheet.create({
     width:'100%',
     flex:1,
   },
-  buttomtext: {
+  buttomwaku: {
     color:'black',
     fontWeight:'bold',
     fontSize: 20,
@@ -397,13 +417,18 @@ const styles = StyleSheet.create({
     padding:5,
     marginLeft: 40,
     marginRight: 100,
-    
+  },
+  buttomtext: {
+    fontSize:20,
   },
   buttonsita: {
     backgroundColor:'#d7e0ff',
     borderRadius: 10,
     borderColor:'black',
     borderWidth:2,
+    justifyContent:'center',
+    alignItems:'center',
+    paddingHorizontal:20,
   },
   tableall: {
     width: "100%",
@@ -488,14 +513,21 @@ const styles = StyleSheet.create({
     justifyContent:'center',
   },
   h2: {
-    width:'50%',
+    width:'40%',
     borderWidth:2,
     borderColor:'black',
     alignItems:'center',
     justifyContent:'center',
   },
   h3: {
-    width:'30%',
+    width:'20%',
+    borderWidth:2,
+    borderColor:'black',
+    alignItems:'center',
+    justifyContent:'center',
+  },
+  h4: {
+    width:'20%',
     borderWidth:2,
     borderColor:'black',
     alignItems:'center',
@@ -505,6 +537,9 @@ const styles = StyleSheet.create({
     marginVertical:10,
     fontSize:20,
     fontWeight:'bold',
+  },
+  checkboxconatiner: {
+    width:'20%',
   },
   id: {
     fontSize:15,
