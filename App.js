@@ -1,5 +1,5 @@
 import  React,  { useState } from 'react';
-import { SafeAreaView ,StyleSheet ,Button, View, Text ,TextInput, TouchableOpacity, FlatList, Alert, TouchableHighlight, CheckBox} from 'react-native';
+import { SafeAreaView ,StyleSheet ,Button, View, Text ,TextInput, TouchableOpacity, FlatList, Alert, TouchableHighlight, } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Table, Row, Rows,TableWrapper, Col  } from 'react-native-table-component';
@@ -7,15 +7,16 @@ import { inputGakubudeta, saveGakubuName } from './holddeta/savedeta';
 //import { searchScreen } from './seachscreen';
 //import { classTapScreen } from './classScreen';
 import { readdeta } from './holddeta/readdeta';
-//import { CheckBox } from 'react-native-elements';
+import { CheckBox } from 'react-native-elements';
 
 
 //時間割管理ホーム画面
-function HomeScreen({ navigation }) {
+function HomeScreen({ navigation ,route}) {
+
+  //let {kamoku}= route.params;
 
   //学部名保存
   const [gakubuValue, setGakubuName] = useState("hello shimane!");
-
   //alert終了+学部名保存
   const closepop1 =() => {
     try {
@@ -25,7 +26,6 @@ function HomeScreen({ navigation }) {
       alert(er)
     }
   }
-
   const closepop2 =() => {
     try {
       saveGakubuName("総合理工学部")
@@ -34,7 +34,6 @@ function HomeScreen({ navigation }) {
       alert(er)
     }
   }
-
   const closepop3 =() => {
     try {
       saveGakubuName("人間科学部")
@@ -43,7 +42,6 @@ function HomeScreen({ navigation }) {
       alert(er)
     }
   }
-
   const closepop4 =() => {
     try {
       saveGakubuName("教育学部")
@@ -52,7 +50,6 @@ function HomeScreen({ navigation }) {
       alert(er)
     }
   }
-
   const closepop5 =() => {
     try {
       saveGakubuName("法文学部")
@@ -61,7 +58,6 @@ function HomeScreen({ navigation }) {
       alert(er)
     }
   }
-
   const closepop6 =() => {
     try {
       saveGakubuName("人文社会学研究科")
@@ -70,7 +66,6 @@ function HomeScreen({ navigation }) {
       alert(er)
     }
   }
-
   const closepop7 =() => {
     try {
       saveGakubuName("教育学研究科")
@@ -79,7 +74,6 @@ function HomeScreen({ navigation }) {
       alert(er)
     }
   }
-
   const closepop8 =() => {
     try {
       saveGakubuName("医学系研究科")
@@ -88,7 +82,6 @@ function HomeScreen({ navigation }) {
       alert(er)
     }
   }
-
   const closepop9 =() => {
     try {
       saveGakubuName("自然科学研究科")
@@ -97,7 +90,6 @@ function HomeScreen({ navigation }) {
       alert(er)
     }
   }
-
   const closepop10 =() => {
     try {
       saveGakubuName("総合理工研究科")
@@ -106,7 +98,6 @@ function HomeScreen({ navigation }) {
       alert(er)
     }
   }
-
   //ポップアップ画面表示切り替え
   let [co,setco] = useState(0);
   if(co == 0) {
@@ -130,46 +121,57 @@ function HomeScreen({ navigation }) {
   }
 
   //テーブルに表示するデータ
+  const [D1, setD1] = useState("環境分析科学");
+  const [D2, setD2] = useState("汽水域生態学");
+  const [D3, setD3] = useState("生命情報学");
+  const [D4, setD4] = useState("微生物実験");
+  const [D5, setD5] = useState("島根学");
+  //setD1({kamoku})
+
+
   const tableHead1 = ['','月', '火', '水', '木','金'];
   const tableHead2 = ['1限', '2限', '3限', '4限','5限'];
   const tableData = [
-    ['1', '2', '3', '4','5'],
-    ['1', '2', '3', '4','5'],
-    ['1', '2', '3', '4','5'],
-    ['1', '2', '3', '4','5'],
-    ['1', '2', '3', '4','5'],
+    [D1, '2', '3', '4','5'],
+    [D2, '2', '3', '4','5'],
+    [D3, '2', '3', '4','5'],
+    [D4, '2', '3', '4','5'],
+    [D5, '2', '3', '4','5'],
   ];
 
   return (
     <SafeAreaView style={styles.container} >
 
+      {/* 画面上(検索バー)部分 */}
       <View style={styles.upper}>
         <View>
-          <TextInput style={styles.input} placeholder="授業科目検索部分"></TextInput>
+          <TextInput style={styles.input} placeholder="授業科目検索"></TextInput>
         </View>
-        
         <TouchableOpacity style={styles.buttoncontainer} onPress={() => navigation.navigate('search_Screen')}>
           <Text style={styles.kensakutext}>検索</Text>
         </TouchableOpacity>
-        
       </View>
 
+      {/* 時間割表 */}
       <View style={styles.tableall}>
         <Table borderStyle={styles.tableborder}>
           <Row data={tableHead1} style={styles.tableHead} textStyle={styles.table_dtext}/>
           <TableWrapper style={styles.tablewrapper}>
-            <Col data={tableHead2} style={styles.tabletitle} textStyle={styles.table_dtext}/>
-            <Rows data={tableData} flexArr={[1, 1, 1, 1, 1]} textStyle={styles.table_itext}/>
+            <Col data={tableHead2} style={styles.tabletitle} textStyle={styles.table_titletext}/>
+            <Rows data={tableData} flexArr={[1, 1, 1, 1, 1]} textStyle={styles.table_itext} numberOfLines={1} ellipsizeMode={'tail'}/>
           </TableWrapper>
         </Table>
       </View>
 
-        <View style={styles.bottom_horizen}>
-          <Text style={styles.buttomwaku}>{gakubuValue}</Text>
-          <TouchableOpacity　style={styles.buttonsita} onPress={() => alert('まだ未設定です(登録学部の修正とかここでできるかも)')}>
-            <Text style ={styles.buttomtext}>編集</Text>
-          </TouchableOpacity>
+      {/* 画面下(学部名表示)部分 */}
+      <View style={styles.bottom_horizen}>
+        <View style={styles.buttomwaku}>
+          <Text style={styles.buttomwakutext}>{gakubuValue}</Text>
         </View>
+        <TouchableOpacity　style={styles.buttonsita} onPress={() => alert('まだ未設定です(登録学部の修正とかここでできるかも)')}>
+          <Text style ={styles.buttomtext}>編集</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
@@ -177,10 +179,8 @@ function HomeScreen({ navigation }) {
 //検索結果表示
 const d1_Data = require('./assets/firstSemisterLecs/教育.json');
 
-//const [isSelected, setSelection] = useState(false);
 
-
-const Item = ({ 時間割所属, 科目, 担当}) => (
+const Item = ({ 時間割所属, 科目, 担当,}) => (
   <View style={styles.itemSearch}>
     <Text style={styles.id}>{時間割所属}</Text>
     <Text style={styles.title}>{科目}</Text>
@@ -190,14 +190,39 @@ const Item = ({ 時間割所属, 科目, 担当}) => (
 
 
 function searchScreen({navigation}) {
-  
 
+  const [checked, setChecked] = useState(true);
+  
     const renderItem = ({ item }) => (
       <View>
-        <TouchableHighlight onPress={() => navigation.navigate("Classtap_Screen",item)} underlayColor={'red'}>
+        <TouchableHighlight onPress={() => navigation.navigate("Classtap_Screen",item)}>
           <Item 時間割所属={item.時間割所属} 科目={item.科目} 担当={item.担当}/>
         </TouchableHighlight>
-        {/* <CheckBox value={isSelected} onValueChange={setSelection} style={styles.checkboxconatiner}/> */}
+        <CheckBox
+          style={styles.checkboxconatiner}
+          //isChecked={checked.includes(!'')}
+          value={checked}
+          onPress={() => {
+            alert(checked)
+            //alert(isChecked)
+
+            // ... は[]を外している
+            //const newIds = [...checked];
+            //const index = newIds.indexOf(item.時間割コード);
+            //if (index > -1) {
+            //  newIds.splice(index, 1); 
+            //} else {
+            //  newIds.push(item.id)
+            //}
+            //newIds.push(item.時間割コード)
+            //setChecked(newIds)
+            setChecked(item.時間割コード)
+            alert(checked)
+          }}
+        />
+        
+        
+
       </View>
     );
   
@@ -214,12 +239,15 @@ function searchScreen({navigation}) {
           <View style={styles.h3}>
             <Text style={styles.headerText}>担当</Text>
           </View>
-          
+          <View style={styles.h4}>
+            <Text style={styles.headerText}>追加</Text>
+          </View>
         </View>
 
         <FlatList
           data={d1_Data}
           renderItem={renderItem}
+          extraData={checked}
           keyExtractor={item => item.時間割コード}
           style={styles.flatlist}
         />
@@ -233,29 +261,38 @@ function classTapScreen({navigation, route}){
   const { 科目 }= route.params
   const { 担当 }= route.params
   const { 教室名 }= route.params
+
+  let balnkClass = null;
+  if(教室名 =='') {
+    balnkClass = 'データがありません';
+  }else{
+    balnkClass = 教室名;
+  }
+  alert(科目)
+
   return (
     <View style={styles.containerClass}>
       <View style={styles.classTapframe}>
-        <Text style={styles.classTapText}>講義名</Text>
+        <Text style={styles.classTapHeader}>講義名</Text>
         <Text style={styles.classTapText}>{科目}</Text>
       </View>
       <View style={styles.classTapframe}>
-        <Text style={styles.classTapText}>担当者名</Text>
+        <Text style={styles.classTapHeader}>担当者名</Text>
         <Text style={styles.classTapText}>{担当}</Text>
       </View>
       <View style={styles.classTapframe}>
-        <Text style={styles.classTapText}>曜日</Text>
+        <Text style={styles.classTapHeader}>曜日</Text>
         <Text style={styles.classTapText}>エラー</Text>
       </View>
       <View style={styles.classTapframe}>
-        <Text style={styles.classTapText}>時限</Text>
+        <Text style={styles.classTapHeader}>時限</Text>
         <Text style={styles.classTapText}>エラー</Text>
       </View>
       <View style={styles.classTapframe}>
-        <Text style={styles.classTapText}>教室名</Text>
-        <Text style={styles.classTapText}>{教室名}</Text>
+        <Text style={styles.classTapHeader}>教室名</Text>
+        <Text style={styles.classTapText}>{balnkClass}</Text>
       </View>
-      <TouchableOpacity style={styles.homeBackbtnStyle} onPress={() => navigation.navigate('Home_Screen')}>
+      <TouchableOpacity style={styles.homeBackbtnStyle} onPress={() => navigation.navigate('Home_Screen', { kamoku: 科目})}>
         <Text style={styles.homeBackbtn}>追加</Text>
       </TouchableOpacity>
       {/* <Button title="追加" onPress={() => navigation.navigate('Home_Screen')}/> */}
@@ -289,11 +326,12 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     justifyContent:'space-around',
     alignItems: 'center',
+    marginTop:10,
   },
   tableall: {
     width: "100%",
     flex:8,
-    paddingTop: 10, 
+    paddingTop: 20, 
     backgroundColor: '#fff',
   },
   bottom: {
@@ -341,40 +379,6 @@ const styles = StyleSheet.create({
   tabletitle: {
      backgroundColor: '#d7e0ff',
   },
-  table_dtext: {
-    fontSize:25,
-    paddingVertical:30,
-    textAlign: 'center',
-    fontWeight: 'bold'
-  },
-  table_itext: {
-    fontSize:23,
-    paddingVertical:35,
-    textAlign: 'center'
-  },
-  modalbacground: {
-    flex:1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent:'center',
-    alignItems:'center',
-  },
-  modalcontainer: {
-    width:'80%',
-    backgroundColor: 'white',
-    paddingHorizontal: 20,
-    paddingVertical: 30,
-    borderRadius: 20,
-    elevation:20,
-  },
-  modalbtn_1: {
-    width:"30%",
-    alignItems:'center',
-    justifyContent:'center',
-    backgroundColor:'#d7e0ff',
-    borderWidth:2,
-    borderColor: "black",
-    borderRadius:10,
-  },
   decidebutton: {
     marginTop:20,
     width:"40%",
@@ -391,16 +395,6 @@ const styles = StyleSheet.create({
     paddingVertical:10,
     fontWeight:'bold'
   },
-  popuptext: {
-    width:'80%',
-    marginVertical: 20,
-    borderRadius: 10,
-    borderColor:'black',
-    borderWidth:2,
-    backgroundColor:'#d7e0ff',
-    paddingVertical:20,
-    fontSize:20,
-  },
   bottom_horizen: {
     flexDirection: 'row',
     width:'100%',
@@ -408,18 +402,24 @@ const styles = StyleSheet.create({
   },
   buttomwaku: {
     color:'black',
-    fontWeight:'bold',
-    fontSize: 20,
     borderWidth:2,
     borderColor:'black',
     backgroundColor:'#d7e0ff',
     borderRadius: 10,
-    padding:5,
     marginLeft: 40,
     marginRight: 100,
+    justifyContent:'center',
+    alignItems:'center',
+  },
+  buttomwakutext: {
+    fontWeight:'bold',
+    color:'black',
+    fontSize: 20,
+    paddingHorizontal:5,
   },
   buttomtext: {
     fontSize:20,
+    fontWeight:'bold'
   },
   buttonsita: {
     backgroundColor:'#d7e0ff',
@@ -430,12 +430,6 @@ const styles = StyleSheet.create({
     alignItems:'center',
     paddingHorizontal:20,
   },
-  tableall: {
-    width: "100%",
-    flex:8,
-    paddingTop: 10, 
-    backgroundColor: '#fff',
-  },
   tableborder: {
     borderWidth: 2,
      borderColor: 'black',
@@ -443,22 +437,23 @@ const styles = StyleSheet.create({
   tablehead: {
     backgroundColor: 'red'
   },
-  tablewrapper: {
-     flexDirection: 'row' ,
-  },
-  tabletitle: {
-     backgroundColor: '#d7e0ff',
-  },
   table_dtext: {
     fontSize:25,
-    paddingVertical:30,
+    paddingVertical:'10%',
+    textAlign: 'center',
+    fontWeight: 'bold'
+  },
+  table_titletext: {
+    fontSize:25,
+    //paddingVertical:'70%',
     textAlign: 'center',
     fontWeight: 'bold'
   },
   table_itext: {
-    fontSize:23,
-    paddingVertical:35,
-    textAlign: 'center'
+    fontWeight:'bold',
+    fontSize:15,
+    paddingVertical:'65%',
+    textAlign: 'center',
   },
   tuikabtn: {
     width:'100%',
@@ -539,7 +534,8 @@ const styles = StyleSheet.create({
     fontWeight:'bold',
   },
   checkboxconatiner: {
-    width:'20%',
+    width:30,
+    height:30,
   },
   id: {
     fontSize:15,
@@ -561,15 +557,20 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
   },
   classTapframe: {
-    marginVertical:20,
+    marginVertical:25,
     justifyContent:'center',
     alignItems:'center',
+  },
+  classTapHeader: {
+    fontSize:30,
+    color:'blue',
+    fontWeight:'bold',
   },
   classTapText: {
     fontSize:30,
     color:'black',
     fontWeight:'bold',
-    marginVertical:5,
+    marginTop:20,
   },
   homeBackbtnStyle: {
     borderColor:'red',
