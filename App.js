@@ -3,11 +3,12 @@ import { SafeAreaView ,StyleSheet ,Button, View, Text ,TextInput, TouchableOpaci
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Table, Row, Rows,TableWrapper, Col  } from 'react-native-table-component';
-import { inputGakubudeta, saveGakubuName } from './holddeta/savedeta';
+import { saveGakubuName } from './holddeta/savedeta';
 //import { searchScreen } from './seachscreen';
 //import { classTapScreen } from './classScreen';
 import { readdeta } from './holddeta/readdeta';
-import { CheckBox } from 'react-native-elements';
+//import { CheckBox } from 'react-native-elements';
+import { CheckBox } from 'react-native-elements'
 
 
 //時間割管理ホーム画面
@@ -17,10 +18,11 @@ function HomeScreen({ navigation ,route}) {
 
   //学部名保存
   const [gakubuValue, setGakubuName] = useState("hello shimane!");
+  
   //alert終了+学部名保存
   const closepop1 =() => {
     try {
-      saveGakubuName("生物資源科学部")
+      saveGakubuName(['Gakubuname','生物資源科学部'])
       setGakubuName("生物資源科学部")
     }catch(er) {
       alert(er)
@@ -180,49 +182,33 @@ function HomeScreen({ navigation ,route}) {
 const d1_Data = require('./assets/firstSemisterLecs/教育.json');
 
 
-const Item = ({ 時間割所属, 科目, 担当,}) => (
+const Item = ({ 時間割所属, 科目, 担当, 時間割コード}) => (
   <View style={styles.itemSearch}>
-    <Text style={styles.id}>{時間割所属}</Text>
-    <Text style={styles.title}>{科目}</Text>
-    <Text style={styles.teacher}>{担当}</Text>
+    <View style={{flexDirection:'row'}}>
+      <Text style={styles.id}>{時間割所属}</Text>
+      <Text style={styles.title}>{科目}</Text>
+      <Text style={styles.teacher}>{担当}</Text>
+    </View>
   </View>
 );
 
 
 function searchScreen({navigation}) {
 
-  const [checked, setChecked] = useState(true);
+  const [checked, setChecked] = useState(false);
   
     const renderItem = ({ item }) => (
-      <View>
-        <TouchableHighlight onPress={() => navigation.navigate("Classtap_Screen",item)}>
+      <View style={{flexDirection:'row'}}>
+        <TouchableHighlight style={{width:'90%'}} onPress={() => navigation.navigate("Classtap_Screen",item)}>
           <Item 時間割所属={item.時間割所属} 科目={item.科目} 担当={item.担当}/>
         </TouchableHighlight>
-        <CheckBox
-          style={styles.checkboxconatiner}
-          //isChecked={checked.includes(!'')}
-          value={checked}
-          onPress={() => {
-            alert(checked)
-            //alert(isChecked)
-
-            // ... は[]を外している
-            //const newIds = [...checked];
-            //const index = newIds.indexOf(item.時間割コード);
-            //if (index > -1) {
-            //  newIds.splice(index, 1); 
-            //} else {
-            //  newIds.push(item.id)
-            //}
-            //newIds.push(item.時間割コード)
-            //setChecked(newIds)
-            setChecked(item.時間割コード)
-            alert(checked)
-          }}
-        />
-        
-        
-
+        <View style={{justifyContent:'center',borderWidth:1,}}>
+          <CheckBox
+            style={{alignItems:'center'}}
+            checked={checked}
+            onPress = {() => setChecked(!checked)}
+          />
+        </View>
       </View>
     );
   
@@ -257,7 +243,7 @@ function searchScreen({navigation}) {
 }
 
 //詳細画面
-function classTapScreen({navigation, route}){
+function classTapScreen({ navigation: { goBack  }, route}){
   const { 科目 }= route.params
   const { 担当 }= route.params
   const { 教室名 }= route.params
@@ -268,7 +254,6 @@ function classTapScreen({navigation, route}){
   }else{
     balnkClass = 教室名;
   }
-  alert(科目)
 
   return (
     <View style={styles.containerClass}>
@@ -292,9 +277,8 @@ function classTapScreen({navigation, route}){
         <Text style={styles.classTapHeader}>教室名</Text>
         <Text style={styles.classTapText}>{balnkClass}</Text>
       </View>
-      <TouchableOpacity style={styles.homeBackbtnStyle} onPress={() => navigation.navigate('Home_Screen', { kamoku: 科目})}>
-        <Text style={styles.homeBackbtn}>追加</Text>
-      </TouchableOpacity>
+      <Button onPress={() => goBack()} title="Go back from ProfileScreen" />
+    
       {/* <Button title="追加" onPress={() => navigation.navigate('Home_Screen')}/> */}
     </View>
   );
@@ -490,11 +474,12 @@ const styles = StyleSheet.create({
     //marginTop: StatusBar.currentHeight || 0,
   },
   itemSearch: {
+    //width:'90%',
     backgroundColor: '#b0caf9',
     padding: 20,
     borderWidth:1,
     borderColor:'black',
-    marginHorizontal: 1,
+    //marginHorizontal: 1,
     flexDirection:'row'
   },
   searchHeader: {
@@ -529,13 +514,9 @@ const styles = StyleSheet.create({
     justifyContent:'center',
   },
   headerText: {
-    marginVertical:10,
+    marginVertical:15,
     fontSize:20,
     fontWeight:'bold',
-  },
-  checkboxconatiner: {
-    width:30,
-    height:30,
   },
   id: {
     fontSize:15,
@@ -544,11 +525,16 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 15,
-    width:'55%',
+    width:'50%',
   },
   teacher: {
     fontSize:15,
-    width:'25%',
+    width:'20%',
+  },
+  checkboxSpace:{
+    width:'15%',
+    padding:10,
+    padding:10,
   },
   containerClass:{
     flex: 1,
