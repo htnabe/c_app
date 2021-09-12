@@ -8,7 +8,8 @@ import { saveGakubuName } from './holddeta/savedeta';
 //import { classTapScreen } from './classScreen';
 import { readdeta } from './holddeta/readdeta';
 //import { CheckBox } from 'react-native-elements';
-import { CheckBox } from 'react-native-elements'
+import {CheckBox} from '@react-native-community/checkbox';
+import { unstable_renderSubtreeIntoContainer } from 'react-dom';
 
 
 //時間割管理ホーム画面
@@ -195,7 +196,23 @@ const Item = ({ 時間割所属, 科目, 担当, 時間割コード}) => (
 
 function searchScreen({navigation}) {
 
-  const [checked, setChecked] = useState(false);
+  const [data, setChecked] = useState([]);
+
+  const onchangeValue = (itemSelected) => {
+    const newData = data.map(item => {
+      if (item.時間割コード == itemSelected.時間割コード) {
+        return {
+          ...item,
+          selected: !item.selected
+        }
+      }
+      return {
+        ...item,
+        selected: item.selected
+      }
+    })
+    setChecked(newData)
+  }
   
     const renderItem = ({ item }) => (
       <View style={{flexDirection:'row'}}>
@@ -204,13 +221,24 @@ function searchScreen({navigation}) {
         </TouchableHighlight>
         <View style={{justifyContent:'center',borderWidth:1,}}>
           <CheckBox
-            style={{alignItems:'center'}}
-            checked={checked}
-            onPress = {() => setChecked(!checked)}
+            disabled={false}
+            //checked={data}
+            onValueChange ={() => onchangeValue(item)}
+            //onPress = {() => setChecked(!checked)}
+            style={{alignItems:'center', }}
           />
         </View>
       </View>
     );
+
+    const onSelectItem = () => {
+      const selected = data.filter(item => item.selected == true);
+      let selectedvalue = '';
+      selected.forEach(item => {
+        selectedvalue = selectedvalue + item.title +'\n';
+      });
+      alert(selectedvalue)
+    }
   
     return (
       <SafeAreaView style={styles.containerSearch}>
@@ -233,10 +261,18 @@ function searchScreen({navigation}) {
         <FlatList
           data={d1_Data}
           renderItem={renderItem}
-          extraData={checked}
+          extraData={data}
           keyExtractor={item => item.時間割コード}
           style={styles.flatlist}
         />
+        
+        <View style={styles.searchTuikacontainer}>
+          <TouchableOpacity style={styles.searchTuikaBtn} onPress ={() => onSelectItem()}>
+            <Text style={styles.searchTuikaBtnText}>追加</Text>
+          </TouchableOpacity>
+        </View>
+        
+        
         
       </SafeAreaView>
     );
@@ -267,19 +303,23 @@ function classTapScreen({ navigation: { goBack  }, route}){
       </View>
       <View style={styles.classTapframe}>
         <Text style={styles.classTapHeader}>曜日</Text>
-        <Text style={styles.classTapText}>エラー</Text>
+        <Text style={styles.classTapText}>あとで調整</Text>
       </View>
       <View style={styles.classTapframe}>
         <Text style={styles.classTapHeader}>時限</Text>
-        <Text style={styles.classTapText}>エラー</Text>
+        <Text style={styles.classTapText}>あとで調整</Text>
       </View>
       <View style={styles.classTapframe}>
         <Text style={styles.classTapHeader}>教室名</Text>
         <Text style={styles.classTapText}>{balnkClass}</Text>
       </View>
-      <Button onPress={() => goBack()} title="Go back from ProfileScreen" />
     
-      {/* <Button title="追加" onPress={() => navigation.navigate('Home_Screen')}/> */}
+      <View style={styles.ctTuikaContainer}>
+        <TouchableOpacity style={styles.ctTuikaBtn} onPress={() => goBack()}>
+          <Text style={styles.ctTuikaBtnText}>追加</Text>
+        </TouchableOpacity>
+      </View>
+
     </View>
   );
 }
@@ -418,9 +458,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
      borderColor: 'black',
   },
-  tablehead: {
-    backgroundColor: 'red'
-  },
   table_dtext: {
     fontSize:25,
     paddingVertical:'10%',
@@ -484,6 +521,25 @@ const styles = StyleSheet.create({
   },
   searchHeader: {
     flexDirection:'row',
+  },
+  searchTuikaBtn: {
+    width:'20%',
+    borderColor:'black',
+    borderWidth:2,
+    borderRadius:10,
+    alignItems:'center',
+    backgroundColor:'#ffd2bc'
+  },
+  searchTuikacontainer: {
+    alignItems:'flex-end',
+    marginTop:10,
+  },
+  searchTuikaBtnText: {
+    fontSize:20,
+    padding:10,
+    fontWeight:'bold',
+    justifyContent:'center',
+    alignItems:'center',
   },
   h1: {
     width:'20%',
@@ -558,16 +614,21 @@ const styles = StyleSheet.create({
     fontWeight:'bold',
     marginTop:20,
   },
-  homeBackbtnStyle: {
-    borderColor:'red',
-    borderWidth:5,
-    borderRadius:10,
+  ctTuikaContainer:{
+    width:'30%',
+    alignItems:'center',
   },
-  homeBackbtn: {
-    padding:10,
+  ctTuikaBtn: {
+    borderWidth:2,
+    borderRadius:10,
+    borderColor:'black',
+    backgroundColor:'#ffd2bc'
+  },
+  ctTuikaBtnText: {
     fontSize:30,
-    color:'red',
+    padding:10,
     fontWeight:'bold',
+    color:'black',
   }
 
 });
