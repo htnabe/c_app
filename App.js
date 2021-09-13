@@ -8,8 +8,8 @@ import { readdeta } from './holddeta/readdeta';
 //import { searchScreen } from './seachscreen';
 //import { classTapScreen } from './classScreen';
 
-//import { CheckBox } from 'react-native-elements';
-import CheckBox from '@react-native-community/checkbox';
+import { CheckBox } from 'react-native-elements';
+//import CheckBox from '@react-native-community/checkbox';
 
 
 //時間割管理ホーム画面
@@ -196,28 +196,8 @@ const Item = ({ 時間割所属, 科目, 担当, 時間割コード}) => (
 
 function searchScreen({navigation}) {
 
-  const [data, setChecked] = useState([]);
+  const [data, setChecked] = useState(false);
 
-  const onchangeValue = (itemSelected) => {
-
-    //newData = true or false、mapで配列の要素に対して
-    const newData = data.map(item => {
-      if (item.時間割コード == itemSelected.時間割コード) {
-        return {
-
-          // ...で配列の[]をはずしてる？
-          ...item,
-          selected: !item.selected
-        }
-      }
-      return {
-
-        ...item,
-        selected: item.selected
-      }
-    })
-    setChecked(newData)
-  }
   
     const renderItem = ({ item }) => (
         <View style={{flexDirection:'row'}}>
@@ -226,24 +206,17 @@ function searchScreen({navigation}) {
           </TouchableHighlight>
           <View style={{justifyContent:'center',borderWidth:1,}}>
             <CheckBox
-              disabled={false}
-              //checked={data}
-              onValueChange ={() => onchangeValue(item)}
-              //onPress = {() => setChecked(!checked)}
+              //disabled={false}
+              //onValueChange ={() => onchangeValue(item)}
+              checked={data}       
+              onPress = {() => setChecked(!data)}
               style={{alignItems:'center', }}
             />
           </View>
         </View>
       );
 
-    const onSelectItem = () => {
-      const selected = data.filter(item => item.selected == true);
-      let selectedvalue = '';
-      selected.forEach(item => {
-        selectedvalue = selectedvalue + item.title +'\n';
-      });
-      alert(selectedvalue)
-    }
+    
   
     return (
       <SafeAreaView style={styles.containerSearch}>
@@ -272,7 +245,7 @@ function searchScreen({navigation}) {
         />
         
         <View style={styles.searchTuikacontainer}>
-          <TouchableOpacity style={styles.searchTuikaBtn} onPress ={() => onSelectItem()}>
+          <TouchableOpacity style={styles.searchTuikaBtn} onPress ={() => alert('ここ')}>
             <Text style={styles.searchTuikaBtnText}>追加</Text>
           </TouchableOpacity>
         </View>
