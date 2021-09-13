@@ -1,15 +1,15 @@
 import  React,  { useState } from 'react';
-import { SafeAreaView ,StyleSheet ,Button, View, Text ,TextInput, TouchableOpacity, FlatList, Alert, TouchableHighlight, } from 'react-native';
+import { SafeAreaView ,StyleSheet , View, Text ,TextInput, TouchableOpacity, FlatList, Alert, TouchableHighlight} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Table, Row, Rows,TableWrapper, Col  } from 'react-native-table-component';
 import { saveGakubuName } from './holddeta/savedeta';
+import { readdeta } from './holddeta/readdeta';
 //import { searchScreen } from './seachscreen';
 //import { classTapScreen } from './classScreen';
-import { readdeta } from './holddeta/readdeta';
+
 //import { CheckBox } from 'react-native-elements';
-import {CheckBox} from '@react-native-community/checkbox';
-import { unstable_renderSubtreeIntoContainer } from 'react-dom';
+import CheckBox from '@react-native-community/checkbox';
 
 
 //時間割管理ホーム画面
@@ -199,14 +199,19 @@ function searchScreen({navigation}) {
   const [data, setChecked] = useState([]);
 
   const onchangeValue = (itemSelected) => {
+
+    //newData = true or false、mapで配列の要素に対して
     const newData = data.map(item => {
       if (item.時間割コード == itemSelected.時間割コード) {
         return {
+
+          // ...で配列の[]をはずしてる？
           ...item,
           selected: !item.selected
         }
       }
       return {
+
         ...item,
         selected: item.selected
       }
@@ -215,21 +220,21 @@ function searchScreen({navigation}) {
   }
   
     const renderItem = ({ item }) => (
-      <View style={{flexDirection:'row'}}>
-        <TouchableHighlight style={{width:'90%'}} onPress={() => navigation.navigate("Classtap_Screen",item)}>
-          <Item 時間割所属={item.時間割所属} 科目={item.科目} 担当={item.担当}/>
-        </TouchableHighlight>
-        <View style={{justifyContent:'center',borderWidth:1,}}>
-          <CheckBox
-            disabled={false}
-            //checked={data}
-            onValueChange ={() => onchangeValue(item)}
-            //onPress = {() => setChecked(!checked)}
-            style={{alignItems:'center', }}
-          />
+        <View style={{flexDirection:'row'}}>
+          <TouchableHighlight style={{width:'90%'}} onPress={() => navigation.navigate("Classtap_Screen",item)}>
+            <Item 時間割所属={item.時間割所属} 科目={item.科目} 担当={item.担当}/>
+          </TouchableHighlight>
+          <View style={{justifyContent:'center',borderWidth:1,}}>
+            <CheckBox
+              disabled={false}
+              //checked={data}
+              onValueChange ={() => onchangeValue(item)}
+              //onPress = {() => setChecked(!checked)}
+              style={{alignItems:'center', }}
+            />
+          </View>
         </View>
-      </View>
-    );
+      );
 
     const onSelectItem = () => {
       const selected = data.filter(item => item.selected == true);
