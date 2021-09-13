@@ -31,7 +31,7 @@ function HomeScreen({ navigation ,route}) {
   }
   const closepop2 =() => {
     try {
-      saveGakubuName("総合理工学部")
+      saveGakubuName(['Gakubuname','総合理工学部'])
       setGakubuName("総合理工学部")
     }catch(er) {
       alert(er)
@@ -39,7 +39,7 @@ function HomeScreen({ navigation ,route}) {
   }
   const closepop3 =() => {
     try {
-      saveGakubuName("人間科学部")
+      saveGakubuName(['Gakubuname','人間科学部'])
       setGakubuName("人間科学部")
     }catch(er) {
       alert(er)
@@ -47,7 +47,7 @@ function HomeScreen({ navigation ,route}) {
   }
   const closepop4 =() => {
     try {
-      saveGakubuName("教育学部")
+      saveGakubuName(['Gakubuname','教育学部'])
       setGakubuName("教育学部")
     }catch(er) {
       alert(er)
@@ -55,7 +55,7 @@ function HomeScreen({ navigation ,route}) {
   }
   const closepop5 =() => {
     try {
-      saveGakubuName("法文学部")
+      saveGakubuName(['Gakubuname','法文学部'])
       setGakubuName("法文学部")
     }catch(er) {
       alert(er)
@@ -63,7 +63,7 @@ function HomeScreen({ navigation ,route}) {
   }
   const closepop6 =() => {
     try {
-      saveGakubuName("人文社会学研究科")
+      saveGakubuName(['Gakubuname','人文社会学研究科'])
       setGakubuName("人文社会学研究科")
     }catch(er) {
       alert(er)
@@ -71,7 +71,7 @@ function HomeScreen({ navigation ,route}) {
   }
   const closepop7 =() => {
     try {
-      saveGakubuName("教育学研究科")
+      saveGakubuName(['Gakubuname','教育学研究科'])
       setGakubuName("教育学研究科")
     }catch(er) {
       alert(er)
@@ -79,7 +79,7 @@ function HomeScreen({ navigation ,route}) {
   }
   const closepop8 =() => {
     try {
-      saveGakubuName("医学系研究科")
+      saveGakubuName(['Gakubuname','医学系研究科'])
       setGakubuName("医学系研究科")
     }catch(er) {
       alert(er)
@@ -87,7 +87,7 @@ function HomeScreen({ navigation ,route}) {
   }
   const closepop9 =() => {
     try {
-      saveGakubuName("自然科学研究科")
+      saveGakubuName(['Gakubuname','自然科学研究科'])
       setGakubuName("自然科学研究科")
     }catch(er) {
       alert(er)
@@ -95,7 +95,7 @@ function HomeScreen({ navigation ,route}) {
   }
   const closepop10 =() => {
     try {
-      saveGakubuName("総合理工研究科")
+      saveGakubuName(['Gakubuname','総合理工研究科'])
       setGakubuName("総合理工研究科")
     }catch(er) {
       alert(er)
@@ -124,12 +124,18 @@ function HomeScreen({ navigation ,route}) {
   }
 
   //テーブルに表示するデータ
-  const [D1, setD1] = useState("環境分析科学");
+
+  
+  
+
+  const [D1, setD1] = useState('-');
+  
   const [D2, setD2] = useState("汽水域生態学");
   const [D3, setD3] = useState("生命情報学");
   const [D4, setD4] = useState("微生物実験");
   const [D5, setD5] = useState("島根学");
-  //setD1({kamoku})
+
+  
 
 
   const tableHead1 = ['','月', '火', '水', '木','金'];
@@ -216,6 +222,14 @@ function searchScreen({navigation}) {
         </View>
       );
 
+    //追加ボタン処理（テスト）
+    const test_Tuikabtn_0 = d1_Data[0]['曜日・時限'];
+    const test_Tuikabtn_1 = d1_Data[0]['科目'];
+
+    const passDeta =() => {
+      saveGakubuName([test_Tuikabtn_0,test_Tuikabtn_1])
+      navigation.navigate('Home_Screen')
+    }
     
   
     return (
@@ -245,12 +259,11 @@ function searchScreen({navigation}) {
         />
         
         <View style={styles.searchTuikacontainer}>
-          <TouchableOpacity style={styles.searchTuikaBtn} onPress ={() => alert('ここ')}>
+          {/* saveGakubuName(時限・時間割,科目) */}
+          <TouchableOpacity style={styles.searchTuikaBtn} onPress ={() => passDeta()}>
             <Text style={styles.searchTuikaBtnText}>追加</Text>
           </TouchableOpacity>
         </View>
-        
-        
         
       </SafeAreaView>
     );

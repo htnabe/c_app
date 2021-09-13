@@ -1,62 +1,103 @@
-import  React,  { useState } from 'react';
-import { SafeAreaView ,StyleSheet ,Button, View, Text ,Checkbox, TouchableOpacity, Animated, Dimensions, Alert} from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Table, Row, Rows,TableWrapper, Col  } from 'react-native-table-component';
+import React from 'react';
+import { StyleSheet, Text, View, FlatList, TouchableHighlight } from 'react-native';
 
-//検索結果表示画面
-export function SearchScreen({ navigation }) {
 
-  const K_tableHead = ['','講義名', '担当者名', '追加'];
-  const K_tabletitle = ['1', '2', '3', '4','5'];
-  const K_tableData = [
-    ['1', '2', '□'],
-    ['1', '2', '□'],
-    ['1', '2', '□'],
-    ['1', '2', '□'],
-    ['1', '2', '□'],
-  ];
+const d1_Data = require('./assets/firstSemisterLecs/教育.json');
+
+const Item = ({ 時間割所属, 科目, 担当}) => (
+  <View style={styles.item}>
+    <Text style={styles.id}>{時間割所属}</Text>
+    <Text style={styles.title}>{科目}</Text>
+    <Text style={styles.teacher}>{担当}</Text>
+  </View>
+);
+
+
+export function searchScreen({navigation}) {
+
+    const renderItem = ({ item }) => (
+      <TouchableHighlight onPress={() => navigation.navigate("Classtap_Screen",科目)} underlayColor={'red'}>
+          <Item 時間割所属={item.時間割所属} 科目={item.科目} 担当={item.担当}/>
+      </TouchableHighlight>
+    );
   
-  return (
-    <SafeAreaView style={styles.container}>
-
-        
-
-          {/* <Checkbox value={box_1_value} onChange={() => setCvlaue(true)}></Checkbox> */}
-
-
-          <View style={{flex:7,backgroundColor:"#fff",width:"100%"}}>
-            <Table borderStyle={{borderWidth: 2, borderColor: 'black'}}>
-              <Row data={K_tableHead} textStyle={styles.table_dtext} flexArr={[1, 1.5, 1.5, 1]}/>
-              <TableWrapper style={styles.tablewrapper}>
-                <Col data={K_tabletitle} style={styles.tabletitle} textStyle={styles.table_dtext}/>
-                <Rows data={K_tableData} flexArr={[1.5, 1.5, 1]} textStyle={styles.table_itext}/>
-              </TableWrapper>
-            </Table>
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.searchHeader}>
+          <View style={styles.h1}>
+            <Text style={styles.headerText}>所属</Text>
           </View>
-
-          <View style={{width:'100%',flex: 1,alignItems:'flex-end'}}> 
-            <View style={{borderWidth:2,borderColor: "black",borderRadius:10,padding:5,width:'30%', backgroundColor:"#d7e0ff"}}>
-              <Button title="追加" onPress={() => navigation.navigate('Home_Screen')} />
-            </View>
+          <View style={styles.h2}>
+            <Text style={styles.headerText}>科目</Text>
           </View>
-          
-          <View style={{width:'100%',flex: 1,alignItems:'flex-end'}}> 
-            <View style={{flex: 1,width:"70%", borderColor: "black",backgroundColor:"#d7e0ff",borderRadius:10, padding:10}}>
-              <Button title="Classtap_screenへの遷移" onPress={() => navigation.navigate('Classtap_Screen')} />
-            </View>
+          <View style={styles.h3}>
+            <Text style={styles.headerText}>担当</Text>
           </View>
-      
-    </SafeAreaView>
-  );
-}
-
+        </View>
+        <FlatList
+          data={d1_Data}
+          renderItem={renderItem}
+          keyExtractor={item => item.時間割コード}
+          style={styles.flatlist}
+        />
+        <Text></Text>
+      </SafeAreaView>
+    );
+  }
 
   const styles = StyleSheet.create({
-    container: {
-        flex:1,
-        //height:HEIGHT,
-        backgroundColor:'#fff',
+    containerSearch: {
+      flex: 1,
+      marginTop: StatusBar.currentHeight || 0,
     },
-    
-});
+    itemSearch: {
+      backgroundColor: '#b0caf9',
+      padding: 20,
+      borderWidth:1,
+      borderColor:'black',
+      marginHorizontal: 1,
+      flexDirection:'row'
+    },
+    searchHeader: {
+      flexDirection:'row',
+    },
+    h1: {
+      width:'20%',
+      borderWidth:2,
+      borderColor:'black',
+      alignItems:'center',
+      justifyContent:'center',
+    },
+    h2: {
+      width:'50%',
+      borderWidth:2,
+      borderColor:'black',
+      alignItems:'center',
+      justifyContent:'center',
+    },
+    h3: {
+      width:'30%',
+      borderWidth:2,
+      borderColor:'black',
+      alignItems:'center',
+      justifyContent:'center',
+    },
+    headerText: {
+      marginVertical:10,
+      fontSize:20,
+      fontWeight:'bold',
+    },
+    id: {
+      fontSize:15,
+      fontWeight:'bold',
+      width:'20%',
+    },
+    title: {
+      fontSize: 15,
+      width:'55%',
+    },
+    teacher: {
+      fontSize:15,
+      width:'25%',
+    }
+  });
