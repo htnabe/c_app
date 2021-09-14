@@ -124,11 +124,16 @@ function HomeScreen({ navigation ,route}) {
   }
 
   //テーブルに表示するデータ
-
-  
-  
+  const fff = readdeta('月1,月2');
 
   const [D1, setD1] = useState('-');
+
+  if(fff == null) {
+    setD1('空')
+  }else{
+    setD1(fff)
+  }
+
   
   const [D2, setD2] = useState("汽水域生態学");
   const [D3, setD3] = useState("生命情報学");
