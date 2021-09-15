@@ -126,23 +126,18 @@ function HomeScreen({ navigation ,route}) {
   //テーブルに表示するデータ
   
   const [D1, setD1] = useState('-');
-
-  const fff = readdeta('M532001');
-  
-
-  
   const [D2, setD2] = useState("汽水域生態学");
   const [D3, setD3] = useState("生命情報学");
   const [D4, setD4] = useState("微生物実験");
   const [D5, setD5] = useState("島根学");
 
-  
-
 
   const tableHead1 = ['','月', '火', '水', '木','金'];
   const tableHead2 = ['1限', '2限', '3限', '4限','5限'];
+
+  //const aa = [1,2,3,4,5;6,7];
   const tableData = [
-    [{D1}, '2', '3', '4','5'],
+    [D1, '2', '3', '4','5'],
     [D2, '2', '3', '4','5'],
     [D3, '2', '3', '4','5'],
     [D4, '2', '3', '4','5'],
@@ -178,7 +173,7 @@ function HomeScreen({ navigation ,route}) {
         <View style={styles.buttomwaku}>
           <Text style={styles.buttomwakutext}>{gakubuValue}</Text>
         </View>
-        <TouchableOpacity　style={styles.buttonsita} onPress={() => setD1(readdeta('M532001'))}>
+        <TouchableOpacity　style={styles.buttonsita} onPress={() => alert('aaa')}>
           <Text style ={styles.buttomtext}>編集</Text>
         </TouchableOpacity>
       </View>
@@ -228,7 +223,7 @@ function searchScreen({navigation}) {
     const test_Tuikabtn_1 = d1_Data[0]['科目'];
 
     const passDeta =() => {
-      saveGakubuName(["M532001","生活科内容構成研究"])
+      saveGakubuName([test_Tuikabtn_0,test_Tuikabtn_1])
       navigation.navigate('Home_Screen')
     }
     

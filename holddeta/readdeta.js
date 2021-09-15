@@ -1,10 +1,10 @@
-//import AsyncStorage, { Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import setD1 from '../App'
 
 //データの読み出し
 export async function readdeta(rd) {
 
-    const gbi = await AsyncStorage.getItem({rd});
+    const gbi = await AsyncStorage.getItem(rd);
   
     try {
       if (gbi != null) {

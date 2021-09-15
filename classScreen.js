@@ -10,7 +10,7 @@ export function classTapScreen({navigation}){
   );
 }
 const styles = StyleSheet.create({
-  container:{
+  containerClass:{
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
