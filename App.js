@@ -7,18 +7,15 @@ import { ReadTableData } from './holddeta/ReadTableData';
 import { CheckBox } from 'react-native-elements';
 import HomeScreenPopup from './screens/homeScreenPopup';
 import HomeScreenProp from './screens/homeScreenProp';
-import renderItems from './screens/renderItems';
-
+import SeachScreenHeader from './screens/SeachScreenHeader';
 
 //時間割管理ホーム画面
 function homeScreen({ navigation, route }) {
-
   //ポップアップ
   HomeScreenPopup();
 
   return (
     <SafeAreaView style={styles.container} >
-
       {/* 画面上(検索バー)部分 */}
       <View style={styles.upper}>
         <View>
@@ -28,21 +25,43 @@ function homeScreen({ navigation, route }) {
           <Text style={styles.kensakutext}>検索</Text>
         </TouchableOpacity>
       </View>
-
+      {/* テーブル */}
       <HomeScreenProp />
-
     </SafeAreaView>
   );
 }
 
-//教育.jsonファイル(仮データとして使用)
-const d1_Data = require('./assets/firstSemisterLecs/教育.json');
-
+//searchScreen画面
 function searchScreen({ navigation }) {
+  //教育.jsonファイル(仮データとして使用)
+  const d1_Data = require('./assets/firstSemisterLecs/教育.json');
 
-  //Flatlist + checkBox
-  renderItems();
+  const [data, setChecked] = useState(false);
 
+  const Item = ({ 時間割所属, 科目, 担当 }) => (
+    <View style={styles.itemSearch}>
+      <View style={{ flexDirection: 'row' }}>
+        <Text style={styles.id}>{時間割所属}</Text>
+        <Text style={styles.title}>{科目}</Text>
+        <Text style={styles.teacher}>{担当}</Text>
+      </View>
+    </View>
+  );
+
+  const renderItem = ({ item }) => (
+    <View style={{ flexDirection: 'row' }}>
+      <TouchableHighlight style={{ width: '90%' }} onPress={() => navigation.navigate("Classtap_Screen", item)}>
+        <Item 時間割所属={item.時間割所属} 科目={item.科目} 担当={item.担当} />
+      </TouchableHighlight>
+      <View style={{ justifyContent: 'center', borderWidth: 1, }}>
+        <CheckBox
+          checked={data}
+          onPress={() => setChecked(!data)}
+          style={{ alignItems: 'center' }}
+        />
+      </View>
+    </View>
+  );
   //追加ボタン処理（テスト）
   const test_Tuikabtn_0 = d1_Data[0]['曜日・時限'];
   const test_Tuikabtn_1 = d1_Data[0]['科目'];
@@ -53,30 +72,22 @@ function searchScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.containerSearch}>
+      {/* 上部４項目 */}
+      <SeachScreenHeader />
 
-      <View style={styles.searchHeader}>
-        <View style={styles.h1}>
-          <Text style={styles.headerText}>所属</Text>
-        </View>
-        <View style={styles.h2}>
-          <Text style={styles.headerText}>科目</Text>
-        </View>
-        <View style={styles.h3}>
-          <Text style={styles.headerText}>担当</Text>
-        </View>
-        <View style={styles.h4}>
-          <Text style={styles.headerText}>追加</Text>
-        </View>
-      </View>
-
-      <renderItems />
+      <FlatList
+        data={d1_Data}
+        renderItem={renderItem}
+        extraData={data}
+        keyExtractor={item => item.時間割コード}
+        style={styles.flatlist}
+      />
 
       <View style={styles.searchTuikacontainer}>
         <TouchableOpacity style={styles.searchTuikaBtn} onPress={() => passDeta()}>
           <Text style={styles.searchTuikaBtnText}>追加</Text>
         </TouchableOpacity>
       </View>
-
     </SafeAreaView>
   );
 }
@@ -86,7 +97,6 @@ function classTapScreen({ navigation: { goBack }, route }) {
   const { 科目 } = route.params
   const { 担当 } = route.params
   const { 教室名 } = route.params
-
   let balnkClass = null;
   if (教室名 == '') {
     balnkClass = 'データがありません';
@@ -116,13 +126,11 @@ function classTapScreen({ navigation: { goBack }, route }) {
         <Text style={styles.classTapHeader}>教室名</Text>
         <Text style={styles.classTapText}>{balnkClass}</Text>
       </View>
-
       <View style={styles.ctTuikaContainer}>
         <TouchableOpacity style={styles.ctTuikaBtn} onPress={() => goBack()}>
           <Text style={styles.ctTuikaBtnText}>追加</Text>
         </TouchableOpacity>
       </View>
-
     </View>
   );
 }
@@ -192,9 +200,6 @@ const styles = StyleSheet.create({
   containerSearch: {
     flex: 1,
   },
-  searchHeader: {
-    flexDirection: 'row',
-  },
   searchTuikaBtn: {
     width: '20%',
     borderColor: 'black',
@@ -214,38 +219,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  h1: {
-    width: '20%',
-    borderWidth: 2,
+  itemSearch: {
+    backgroundColor: '#b0caf9',
+    padding: 20,
+    borderWidth: 1,
     borderColor: 'black',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: 'row'
   },
-  h2: {
-    width: '40%',
-    borderWidth: 2,
-    borderColor: 'black',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  h3: {
-    width: '20%',
-    borderWidth: 2,
-    borderColor: 'black',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  h4: {
-    width: '20%',
-    borderWidth: 2,
-    borderColor: 'black',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerText: {
-    marginVertical: 15,
-    fontSize: 20,
+  id: {
+    fontSize: 15,
     fontWeight: 'bold',
+    width: '20%',
+  },
+  title: {
+    fontSize: 15,
+    width: '50%',
+  },
+  teacher: {
+    fontSize: 15,
+    width: '20%',
   },
   containerClass: {
     flex: 1,

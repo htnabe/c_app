@@ -4,12 +4,8 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
 
 export default function homeScreenProp() {
-
-    //学部名保存
-    const [gakubuValue, setGakubuName] = useState("hello shimane!");
-
+    const [gakubuValue, setGakubuValue] = useState('hello shimane')
     //テーブルに表示するデータ
-
     const [D1, setD1] = useState(null);
     const [D2, setD2] = useState("汽水域生態学");
     const [D3, setD3] = useState("生命情報学");
@@ -20,7 +16,6 @@ export default function homeScreenProp() {
     const tableHead1 = ['', '月', '火', '水', '木', '金'];
     const tableHead2 = ['1限', '2限', '3限', '4限', '5限'];
 
-    //const aa = [1,2,3,4,5;6,7];
     const tableData = [
         [D1, '2', '3', '4', '5'],
         [D2, '2', '3', '4', '5'],
