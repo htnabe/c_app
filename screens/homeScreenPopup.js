@@ -1,4 +1,4 @@
-import { saveGakubuName } from '../holddeta/savedeta';
+import { saveGakubuName } from '../holddeta/saveData';
 import { Alert } from 'react-native';
 import  React,  { useState } from 'react';
 
@@ -8,7 +8,7 @@ export default function homeScreenProp() {
 const closepop1 =() => {
     try {
       saveGakubuName(['Gakubuname','生物資源科学部'])
-      
+
     }catch(er) {
       alert(er)
     }
@@ -16,7 +16,7 @@ const closepop1 =() => {
   const closepop2 =() => {
     try {
       saveGakubuName(['Gakubuname','総合理工学部'])
-      
+
     }catch(er) {
       alert(er)
     }
@@ -24,7 +24,7 @@ const closepop1 =() => {
   const closepop3 =() => {
     try {
       saveGakubuName(['Gakubuname','人間科学部'])
-      
+
     }catch(er) {
       alert(er)
     }
@@ -32,7 +32,7 @@ const closepop1 =() => {
   const closepop4 =() => {
     try {
       saveGakubuName(['Gakubuname','教育学部'])
-      
+
     }catch(er) {
       alert(er)
     }
@@ -40,7 +40,7 @@ const closepop1 =() => {
   const closepop5 =() => {
     try {
       saveGakubuName(['Gakubuname','法文学部'])
-      
+
     }catch(er) {
       alert(er)
     }
@@ -48,7 +48,7 @@ const closepop1 =() => {
   const closepop6 =() => {
     try {
       saveGakubuName(['Gakubuname','人文社会学研究科'])
-      
+
     }catch(er) {
       alert(er)
     }
@@ -56,7 +56,7 @@ const closepop1 =() => {
   const closepop7 =() => {
     try {
       saveGakubuName(['Gakubuname','教育学研究科'])
-      
+
     }catch(er) {
       alert(er)
     }
@@ -64,7 +64,7 @@ const closepop1 =() => {
   const closepop8 =() => {
     try {
       saveGakubuName(['Gakubuname','医学系研究科'])
-      
+
     }catch(er) {
       alert(er)
     }
@@ -72,7 +72,7 @@ const closepop1 =() => {
   const closepop9 =() => {
     try {
       saveGakubuName(['Gakubuname','自然科学研究科'])
-      
+
     }catch(er) {
       alert(er)
     }
@@ -80,7 +80,7 @@ const closepop1 =() => {
   const closepop10 =() => {
     try {
       saveGakubuName(['Gakubuname','総合理工研究科'])
-      
+
     }catch(er) {
       alert(er)
     }
@@ -107,4 +107,3 @@ const closepop1 =() => {
     )
   }
 }
-

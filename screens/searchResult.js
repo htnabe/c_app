@@ -1,19 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet, View, Text, TouchableOpacity, FlatList, TouchableHighlight } from 'react-native';
-import { saveGakubuName } from '../holddeta/savedeta';
 import { CheckBox } from 'react-native-elements';
-import SeachScreenHeader from './SeachScreenHeader';
 
 // d1_Dataを検索結果が含まれたjsonデータとして仮定
-import d1_Data from '../assets/firstSemisterLecs/教育.json';
+import d1_Data from '../assets/firstSemisterLecs/総合理工.json';
 
 export default function searchScreen({ navigation }) {
 
+  // searchResultsData: 検索結果が入る
   const [searchResultsData, setsearchResultsData] = useState([]);
   const [isChecked, setisChecked] = useState(true);
-  //追加ボタン処理（テスト用データ）
-  const test_Tuikabtn_0 = d1_Data[0]['曜日・時限'];
-  const test_Tuikabtn_1 = d1_Data[0]['科目'];
 
   getListData = async () => {
     // d1_Dataに"check" = falseの項を追加
@@ -60,22 +56,33 @@ export default function searchScreen({ navigation }) {
   );
 
   // homeスクリーンへデータを渡す処理
-  const passDeta = () => {
-    saveGakubuName([test_Tuikabtn_0, test_Tuikabtn_1])
+  const passData = () => {
     navigation.navigate('Home_Screen')
   }
 
   return (
     <SafeAreaView style={styles.containerSearch}>
-      {/* 上部４項目 */}
-      <SeachScreenHeader />
+      <View style={styles.searchHeader}>
+        <View style={styles.h1}>
+          <Text style={styles.headerText}>所属</Text>
+        </View>
+        <View style={styles.h2}>
+          <Text style={styles.headerText}>科目</Text>
+        </View>
+        <View style={styles.h3}>
+          <Text style={styles.headerText}>担当</Text>
+        </View>
+        <View style={styles.h4}>
+          <Text style={styles.headerText}>追加</Text>
+        </View>
+      </View>
       <FlatList
         data={searchResultsData}
         renderItem={renderItem}
         keyExtractor={item => item.時間割コード}
       />
       <View style={styles.searchTuikacontainer}>
-        <TouchableOpacity style={styles.searchTuikaBtn} onPress={() => passDeta()}>
+        <TouchableOpacity style={styles.searchTuikaBtn} onPress={() => passData()}>
           <Text style={styles.searchTuikaBtnText}>追加</Text>
         </TouchableOpacity>
       </View>
@@ -84,6 +91,7 @@ export default function searchScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  // 検索結果一覧のデザイン
   itemSearch: {
     backgroundColor: '#b0caf9',
     padding: 20,
@@ -104,9 +112,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     width: '20%',
   },
-  containerSearch: {
-    flex: 1,
-  },
+  // 画面下の追加ボタンデザイン
   searchTuikaBtn: {
     width: '20%',
     borderColor: 'black',
@@ -125,5 +131,45 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  // 検索画面ヘッダー関連
+  containerSearch: {
+    flex: 1,
+  },
+  searchHeader: {
+    flexDirection: 'row',
+  },
+  headerText: {
+    marginVertical: 15,
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  h1: {
+    width: '20%',
+    borderWidth: 2,
+    borderColor: 'black',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  h2: {
+    width: '40%',
+    borderWidth: 2,
+    borderColor: 'black',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  h3: {
+    width: '20%',
+    borderWidth: 2,
+    borderColor: 'black',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  h4: {
+    width: '20%',
+    borderWidth: 2,
+    borderColor: 'black',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 })
