@@ -6,7 +6,7 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 export default function homeScreenProp() {
     const [gakubuValue, setGakubuValue] = useState('hello shimane')
     //テーブルに表示するデータ
-    const [D1, setD1] = useState(null);
+    const [D1, setD1] = useState('');
     const [D2, setD2] = useState("汽水域生態学");
     const [D3, setD3] = useState("生命情報学");
     const [D4, setD4] = useState("微生物実験");

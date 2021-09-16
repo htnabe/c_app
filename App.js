@@ -1,13 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { SafeAreaView, StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList, Alert, TouchableHighlight } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { saveGakubuName } from './holddeta/savedeta';
-import { ReadTableData } from './holddeta/ReadTableData';
-import { CheckBox } from 'react-native-elements';
 import HomeScreenPopup from './screens/homeScreenPopup';
 import HomeScreenProp from './screens/homeScreenProp';
-import SeachScreenHeader from './screens/SeachScreenHeader';
+import SearchResult from './screens/searchResult'
 
 //時間割管理ホーム画面
 function homeScreen({ navigation, route }) {
@@ -32,64 +29,11 @@ function homeScreen({ navigation, route }) {
 }
 
 //searchScreen画面
-function searchScreen({ navigation }) {
-  //教育.jsonファイル(仮データとして使用)
-  const d1_Data = require('./assets/firstSemisterLecs/教育.json');
-
-  const [data, setChecked] = useState(false);
-
-  const Item = ({ 時間割所属, 科目, 担当 }) => (
-    <View style={styles.itemSearch}>
-      <View style={{ flexDirection: 'row' }}>
-        <Text style={styles.id}>{時間割所属}</Text>
-        <Text style={styles.title}>{科目}</Text>
-        <Text style={styles.teacher}>{担当}</Text>
-      </View>
-    </View>
-  );
-
-  const renderItem = ({ item }) => (
-    <View style={{ flexDirection: 'row' }}>
-      <TouchableHighlight style={{ width: '90%' }} onPress={() => navigation.navigate("Classtap_Screen", item)}>
-        <Item 時間割所属={item.時間割所属} 科目={item.科目} 担当={item.担当} />
-      </TouchableHighlight>
-      <View style={{ justifyContent: 'center', borderWidth: 1, }}>
-        <CheckBox
-          checked={data}
-          onPress={() => setChecked(!data)}
-          style={{ alignItems: 'center' }}
-        />
-      </View>
-    </View>
-  );
-  //追加ボタン処理（テスト）
-  const test_Tuikabtn_0 = d1_Data[0]['曜日・時限'];
-  const test_Tuikabtn_1 = d1_Data[0]['科目'];
-  const passDeta = () => {
-    saveGakubuName([test_Tuikabtn_0, test_Tuikabtn_1])
-    navigation.navigate('Home_Screen')
-  }
-
+function searchResultScreen() {
+  const navigation = useNavigation();
   return (
-    <SafeAreaView style={styles.containerSearch}>
-      {/* 上部４項目 */}
-      <SeachScreenHeader />
-
-      <FlatList
-        data={d1_Data}
-        renderItem={renderItem}
-        extraData={data}
-        keyExtractor={item => item.時間割コード}
-        style={styles.flatlist}
-      />
-
-      <View style={styles.searchTuikacontainer}>
-        <TouchableOpacity style={styles.searchTuikaBtn} onPress={() => passDeta()}>
-          <Text style={styles.searchTuikaBtnText}>追加</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
-  );
+    <SearchResult navigation={navigation} />
+  )
 }
 
 //授業詳細画面
@@ -142,7 +86,7 @@ function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home_Screen">
         <Stack.Screen name="Home_Screen" component={homeScreen} />
-        <Stack.Screen name="search_Screen" component={searchScreen} />
+        <Stack.Screen name="search_Screen" component={searchResultScreen} />
         <Stack.Screen name="Classtap_Screen" component={classTapScreen} />
       </Stack.Navigator>
     </NavigationContainer>
@@ -196,48 +140,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     padding: 10,
     fontWeight: 'bold'
-  },
-  containerSearch: {
-    flex: 1,
-  },
-  searchTuikaBtn: {
-    width: '20%',
-    borderColor: 'black',
-    borderWidth: 2,
-    borderRadius: 10,
-    alignItems: 'center',
-    backgroundColor: '#ffd2bc'
-  },
-  searchTuikacontainer: {
-    alignItems: 'flex-end',
-    marginTop: 10,
-  },
-  searchTuikaBtnText: {
-    fontSize: 20,
-    padding: 10,
-    fontWeight: 'bold',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  itemSearch: {
-    backgroundColor: '#b0caf9',
-    padding: 20,
-    borderWidth: 1,
-    borderColor: 'black',
-    flexDirection: 'row'
-  },
-  id: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    width: '20%',
-  },
-  title: {
-    fontSize: 15,
-    width: '50%',
-  },
-  teacher: {
-    fontSize: 15,
-    width: '20%',
   },
   containerClass: {
     flex: 1,
