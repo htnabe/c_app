@@ -1,21 +1,20 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import setD1 from '../App'
 
 //データの読み出し
-export async function readdeta(rd) {
+export async function ReadTableData(rd) {
 
-    const gbi = await AsyncStorage.getItem(rd);
-  
-    try {
-      if (gbi != null) {
-        alert('読み出し成功')
-        return gbi;
-      }else{
-        alert('値無し')
-        return "";
-      }
-    } catch (error) {
-    　alert('エラー発生')
-      alert(error)
+  const gbi = await AsyncStorage.getItem(rd);
+
+  try {
+    if (gbi != null) {
+      alert('読み出し成功')
+      return gbi;
+    } else {
+      alert('値無し')
+      return "";
     }
+  } catch (error) {
+    alert('エラー発生')
+    alert(error)
   }
+}

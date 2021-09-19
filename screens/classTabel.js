@@ -1,18 +1,42 @@
 import React, { useState } from 'react';
 import { Table, Row, Rows, TableWrapper, Col } from 'react-native-table-component';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { saveData } from '../holddeta/saveData';
+import { readTableData } from '../holddeta/ReadTableData';
 
 
-export default function homeScreenProp() {
+export default function homeScreenProp({ route }) {
+
+    //所属学部
     const [gakubuValue, setGakubuValue] = useState('hello shimane')
+
     //テーブルに表示するデータ
+    const [firstPeriod, setFirstPeriod] = useState([{ '月1,2': '1' }, { '火1,2': '2' }, { '水1,2': '3' }, { '木1,2': '4' }, { '金1,2': '5' }]);
+    const [secondPeriod, setSecondPeriod] = useState([{ '月3,4': '1' }, { '火3,4': '2' }, { '水3,4': '3' }, { '木3,4': '4' }, { '金3,4': '5' }]);
+    const [thirdPeriod, setThirdPeriod] = useState([{ '月5,6': '1' }, { '火5,6': '2' }, { '水5,6': '3' }, { '木5,6': '4' }, { '金5,6': '5' }]);
+    const [forthPeriod, setForthPeriod] = useState([{ '月7,8': '1' }, { '火7,8': '2' }, { '水7,8': '3' }, { '木7,8': '4' }, { '金7,8': '5' }]);
+    const [fivePeriod, setFivePeriod] = useState([{ '月9,10': '1' }, { '火9,10': '2' }, { '水9,10': '3' }, { '木9,10': '4' }, { '金9,10': '5' }]);
+    const [selectedAll_LData, setSelectedAllData] = useState([{ '1,2時限': '' }, { '3,4時限': '' }, { '5,6時限': '' }, { '7,8時限': '' }, { '9,10時限': '' }]);
+
+    //データの振り分け
+    for (let extractData in route) {
+
+
+    }
+
+    //asyncstorage()にデータを渡す
+    //saveData(['selectedAll_LData', selectedAll_LData])
+
+    //データの呼び出し
+    //const showTableData = readTableData('selectedAll_LData');
+
     const [D1, setD1] = useState('');
     const [D2, setD2] = useState("汽水域生態学");
     const [D3, setD3] = useState("生命情報学");
     const [D4, setD4] = useState("微生物実験");
     const [D5, setD5] = useState("島根学");
 
-
+    //テーブルにおける軸の値
     const tableHead1 = ['', '月', '火', '水', '木', '金'];
     const tableHead2 = ['1限', '2限', '3限', '4限', '5限'];
 
@@ -23,6 +47,7 @@ export default function homeScreenProp() {
         [D4, '2', '3', '4', '5'],
         [D5, '2', '3', '4', '5'],
     ];
+
     return (
         <>
             {/* 時間割表 */}
