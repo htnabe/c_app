@@ -5,7 +5,7 @@ import { CheckBox } from 'react-native-elements';
 // d1_Dataを検索結果が含まれたjsonデータとして仮定
 import d1_Data from '../assets/firstSemisterLecs/総合理工.json';
 
-export default function searchScreen({ navigation }) {
+export default function searchScreen({ navigation }, searchedLectureInfo) {
 
   // searchResultsData: 検索結果が入る
   const [searchResultsData, setsearchResultsData] = useState([]);
