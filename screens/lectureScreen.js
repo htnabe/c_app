@@ -1,21 +1,49 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { SafeAreaView, StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
 
 // 表示パーツのインポート
 import HomeScreenPopup from '../screens/homeScreenPopup';
-import HomeScreenTable from '../screens/classTabel';
+import HomeScreenTable from './classTable';
+import SearchLectureData from '../appFunction/searchLecture';
+
 
 //時間割管理ホーム画面
-export default function lectureScreen({ navigation}) {
+export default function lectureScreen({ navigation }) {
+  const [inputedLectureInfo, setinputedLectureInfo] = useState();
+  const [searchLecture, setsearchLecture] = useState(false);
+  const [searchResult, setsearchResult] = useState();
+
+  // 検索語の読み込み処理
+  useEffect(() => {
+    if (searchLecture) {
+      let lectureInfoData = async () => {
+        setsearchResult(await SearchLectureData(inputedLectureInfo));
+      };
+      lectureInfoData();
+    }
+    setsearchLecture(false);
+  }, [searchLecture]);
+
   //ポップアップ
   HomeScreenPopup();
   return (
     <SafeAreaView style={styles.container} >
       <View style={styles.upper}>
         <View>
-          <TextInput style={styles.input} placeholder="授業科目検索"></TextInput>
+          <TextInput
+            style={styles.input}
+            placeholder="授業科目検索"
+            onChangeText={text => { setinputedLectureInfo(text) }}
+            value={inputedLectureInfo}
+          ></TextInput>
         </View>
-        <TouchableOpacity style={styles.buttoncontainer} onPress={() => navigation.navigate('Search_Screen')}>
+        <TouchableOpacity
+          style={styles.buttoncontainer}
+          onPress={() => {
+            setsearchLecture(true);
+            navigation.navigate('Search_Screen', searchResult);
+          }}
+        >
           <Text style={styles.kensakutext}>検索</Text>
         </TouchableOpacity>
       </View>

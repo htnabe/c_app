@@ -1,78 +1,72 @@
 import { saveGakubuName } from '../holddeta/saveData';
+import { useState } from 'react';
 import { Alert } from 'react-native';
-import React, { useState } from 'react';
 
 
 export default function homeScreenProp() {
-  //alert終了+学部名保存
+  //console.log終了+学部名保存
   const closepop1 = () => {
     try {
-      saveGakubuName(['Gakubuname', '生物資源科学部'])
+      // キー, '学部名, 参照するファイル名'
+      saveGakubuName(['facultyName', '生物資源科学部, 生物資源, 教養教育'])
     } catch (er) {
-      alert(er)
+      console.log('ファイル名：homeScreenPopup.js\n' + 'エラー：' + er + '\n');
     }
   }
   const closepop2 = () => {
     try {
-      saveGakubuName(['Gakubuname', '総合理工学部'])
+      saveGakubuName(['facultyName', '総合理工学部, 総合理工, 教養教育'])
     } catch (er) {
-      alert(er)
+      console.log('ファイル名：homeScreenPopup.js\n' + 'エラー：' + er + '\n');
     }
   }
   const closepop3 = () => {
     try {
-      saveGakubuName(['Gakubuname', '人間科学部'])
+      saveGakubuName(['facultyName', '人間科学部, 教養教育, 人間科学, 人間社会科学'])
     } catch (er) {
-      alert(er)
+      console.log('ファイル名：homeScreenPopup.js\n' + 'エラー：' + er + '\n');
     }
   }
   const closepop4 = () => {
     try {
-      saveGakubuName(['Gakubuname', '教育学部'])
+      saveGakubuName(['facultyName', '教育学部, 教育, 教育学, 教養教育'])
     } catch (er) {
-      alert(er)
+      console.log('ファイル名：homeScreenPopup.js\n' + 'エラー：' + er + '\n');
     }
   }
   const closepop5 = () => {
     try {
-      saveGakubuName(['Gakubuname', '法文学部'])
+      saveGakubuName(['facultyName', '法文学部, 法文, 教養教育'])
     } catch (er) {
-      alert(er)
+      console.log('ファイル名：homeScreenPopup.js\n' + 'エラー：' + er + '\n');
     }
   }
   const closepop6 = () => {
     try {
-      saveGakubuName(['Gakubuname', '人文社会学研究科'])
+      saveGakubuName(['facultyName', '人文社会学研究科, 人文社会学研究科'])
     } catch (er) {
-      alert(er)
+      console.log('ファイル名：homeScreenPopup.js\n' + 'エラー：' + er + '\n');
     }
   }
   const closepop7 = () => {
     try {
-      saveGakubuName(['Gakubuname', '教育学研究科'])
+      saveGakubuName(['facultyName', '教育学研究科, 教育学, 教育学_教職'])
     } catch (er) {
-      alert(er)
-    }
-  }
-  const closepop8 = () => {
-    try {
-      saveGakubuName(['Gakubuname', '医学系研究科'])
-    } catch (er) {
-      alert(er)
+      console.log('ファイル名：homeScreenPopup.js\n' + 'エラー：' + er + '\n');
     }
   }
   const closepop9 = () => {
     try {
-      saveGakubuName(['Gakubuname', '自然科学研究科'])
+      saveGakubuName(['facultyName', '自然科学研究科, 自然科学'])
     } catch (er) {
-      alert(er)
+      console.log('ファイル名：homeScreenPopup.js\n' + 'エラー：' + er + '\n');
     }
   }
   const closepop10 = () => {
     try {
-      saveGakubuName(['Gakubuname', '総合理工研究科'])
+      saveGakubuName(['facultyName', '総合理工研究科, 総合理工_博士後期'])
     } catch (er) {
-      alert(er)
+      console.log('ファイル名：homeScreenPopup.js\n' + 'エラー：' + er + '\n');
     }
   }
   //ポップアップ画面表示切り替え
@@ -90,7 +84,6 @@ export default function homeScreenProp() {
         { text: '法文学部', onPress: () => closepop5() },
         { text: '人文社会学研究科', onPress: () => closepop6() },
         { text: '教育学研究科', onPress: () => closepop7() },
-        { text: '医学系研究科', onPress: () => closepop8() },
         { text: '自然科学研究科', onPress: () => closepop9() },
         { text: '総合理工研究科', onPress: () => closepop10() },
       ],

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Table, Row, Rows, TableWrapper, Col } from 'react-native-table-component';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { saveData } from '../holddeta/saveData';
-import { readTableData } from '../holddeta/ReadTableData';
+import { readTableData } from '../holddeta/readTableData';
 
 
 export default function homeScreenProp({ route }) {
