@@ -1,20 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet, View, Text, TouchableOpacity, FlatList, TouchableHighlight } from 'react-native';
 import { CheckBox } from 'react-native-elements';
+import SearchLecture from '../appFunction/searchLecture';
+import { useRoute, useNavigation } from '@react-navigation/native';
 
-// d1_Dataを検索結果が含まれたjsonデータとして仮定
-import d1_Data from '../assets/firstSemisterLecs/総合理工.json';
-
-export default function searchScreen({ navigation }, searchedLectureInfo) {
+export default function searchScreen() {
 
   // searchResultsData: 検索結果が入る
   const [searchResultsData, setsearchResultsData] = useState([]);
   const [isChecked, setisChecked] = useState(true);
+  const route = useRoute();
+  const navigation = useNavigation();
 
   getListData = async () => {
+    console.log('渡されたキーワード：' + route.params.keyWord + '\n');
+    // 検索実行
+    const searchedLecture = await SearchLecture(route.params.keyWord);
     // d1_Dataに"check" = falseの項を追加
-    await d1_Data.forEach(value => value.checked = false);
-    setsearchResultsData(d1_Data);
+    searchedLecture.forEach(value => value.checked = false);
+    setsearchResultsData(searchedLecture);
+    //console.log('ファイル名：searchResult' + '\nsearchedLectureの中身：' + JSON.stringify(searchedLecture) + '\n');
   }
 
   // マウント時のみ実行される
