@@ -13,16 +13,15 @@ export default function lectureScreen({ navigation }) {
   //ポップアップ
   HomeScreenPopup();
   return (
-    <SafeAreaView style={styles.container} >
+    <View style={styles.container}>
       <View style={styles.upper}>
-        <View>
           <TextInput
             style={styles.input}
             placeholder="授業科目検索"
             onChangeText={text => { setinputedLectureInfo(text) }}
             value={inputedKeyWord}
-          ></TextInput>
-        </View>
+          >
+          </TextInput>
         <TouchableOpacity
           style={styles.buttoncontainer}
           onPress={() => {
@@ -32,9 +31,11 @@ export default function lectureScreen({ navigation }) {
           <Text style={styles.kensakutext}>検索</Text>
         </TouchableOpacity>
       </View>
-      {/* テーブル部分をインポート */}
-      <HomeScreenTable />
-    </SafeAreaView>
+        {/* テーブル部分をインポート */}
+      <View style={styles.bottom}>
+        <HomeScreenTable />
+      </View>
+    </View>
   );
 }
 
@@ -42,42 +43,37 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    flexDirection: 'column',
   },
   upper: {
     width: "100%",
     flex: 1,
     backgroundColor: "#fff",
     flexDirection: 'row',
-    justifyContent: 'space-around',
     alignItems: 'center',
-    marginTop: 10,
   },
   bottom: {
-    width: "100%",
-    flex: 1,
-    backgroundColor: "#fff",
-    justifyContent: 'space-around',
-    alignItems: 'center',
+    flex: 6,
   },
+  // 検索ボタン関連
   input: {
+    flex: 2,
+    marginHorizontal: '1%',
+    borderWidth: 1,
     color: 'black',
     fontSize: 20,
-    width: 210,
-    borderColor: 'black',
-    borderWidth: 2,
+    borderColor:  '#cccccc',
     borderRadius: 10,
     padding: 12,
-    marginTop: 10
   },
   buttoncontainer: {
-    width: "30%",
-    height: "60%",
-    borderWidth: 2,
-    borderColor: "black",
+    flex: 1,
+    marginHorizontal: '1%',
+    borderWidth: 1,
+    borderColor: "#dcdcdc",
     backgroundColor: "#d7e0ff",
     borderRadius: 10,
     padding: 5,
-    marginTop: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
