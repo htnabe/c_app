@@ -1,148 +1,220 @@
-import React, { useState } from 'react';
-import { Table, Row, Rows, TableWrapper, Col } from 'react-native-table-component';
+import React, { useState, useEffect } from 'react';
+import { Table, Row, Cols, TableWrapper, Col } from 'react-native-table-component';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { saveData } from '../holddeta/saveData';
-import { readTableData } from '../holddeta/readTableData';
+import { ScrollView } from 'react-native';
 
+export default function homeScreenProp() {
+  //テーブル軸の値
+  const tableHead1 = ['', '月', '火', '水', '木', '金'];
+  const tableHead2 = ['1', '2', '3', '4', '5'];
+  const [tableData, settableData] = useState([['Mon', '', '', '', ''], ['Tue', '', '', '', ''], ['Wed', '', '', '', ''], ['Thurs', '', '', '', ''], ['Fri', '', '', '', '']]);
+  const [fakeTableData, setfakeTableData] = useState([['月', '', '', '', ''], ['1', '', '', '', ''], ['2', '', '', '', ''], ['3', '', '', '', ''], ['4', '', '', '', '']]);
+  // 選ばれた講義の情報（連想配列形式）を取得
+  // const selectedLectures = readTableData('tableKey');
+  // テスト用データ例
+  const selectedLectures = [{
+    "時間割所属": "教育学部",
+    "開講": "前期",
+    "学年": "2 ,3 ,4",
+    "曜日時限": "月1, 月2",
+    "時間割コード": "M532001",
+    "科目": "生活科内容構成研究",
+    "担当": "川路　澄人",
+    "棟名": "",
+    "教室名": ""
+  },
+  {
+    "時間割所属": "教育学部",
+    "開講": "前期",
+    "学年": "2 ,3 ,4",
+    "曜日時限": "月3, 月4",
+    "時間割コード": "M532011",
+    "科目": "生活科内容構成研究",
+    "担当": "川路　澄人",
+    "棟名": "",
+    "教室名": ""
+  }];
 
-export default function homeScreenProp({ route }) {
+  // 曜日・日時を判別するための配列
+  const days = ['月', '火', '水', '木', '金'];
+  const time = [1, 3, 5, 7, 9];
 
-    //所属学部
-    const [gakubuValue, setGakubuValue] = useState('hello shimane')
+  let mondayLecs = ['Mon', '', '', '', ''];
+  let tuesdayLecs = ['Mon', '', '', '', ''];
+  let wednesdayLecs = ['Mon', '', '', '', ''];
+  let thursdayLecs = ['Mon', '', '', '', ''];
+  let fridayLecs = ['Mon', '', '', '', ''];
 
-    //テーブルに表示するデータ
-    const [firstPeriod, setFirstPeriod] = useState([{ '月1,2': '1' }, { '火1,2': '2' }, { '水1,2': '3' }, { '木1,2': '4' }, { '金1,2': '5' }]);
-    const [secondPeriod, setSecondPeriod] = useState([{ '月3,4': '1' }, { '火3,4': '2' }, { '水3,4': '3' }, { '木3,4': '4' }, { '金3,4': '5' }]);
-    const [thirdPeriod, setThirdPeriod] = useState([{ '月5,6': '1' }, { '火5,6': '2' }, { '水5,6': '3' }, { '木5,6': '4' }, { '金5,6': '5' }]);
-    const [forthPeriod, setForthPeriod] = useState([{ '月7,8': '1' }, { '火7,8': '2' }, { '水7,8': '3' }, { '木7,8': '4' }, { '金7,8': '5' }]);
-    const [fivePeriod, setFivePeriod] = useState([{ '月9,10': '1' }, { '火9,10': '2' }, { '水9,10': '3' }, { '木9,10': '4' }, { '金9,10': '5' }]);
-    const [selectedAll_LData, setSelectedAllData] = useState([{ '1,2時限': '' }, { '3,4時限': '' }, { '5,6時限': '' }, { '7,8時限': '' }, { '9,10時限': '' }]);
-
-    //データの振り分け
-    for (let extractData in route) {
-
-
+  function arrangeLectureData() {
+    if (selectedLectures == "") {
+      return;
     }
 
-    //asyncstorage()にデータを渡す
-    //saveData(['selectedAll_LData', selectedAll_LData])
+    days.forEach(day => {
+      switch (day) {
+        case '月':
+          time.forEach(period => {
+            // 月1などを正規表現で定義
+            let dayTime = new RegExp(day + String(period));
+            // 曜日時限の最初の二文字で判別し、mondayLecsに順番に挿入
+            mondayLecs[time.indexOf(period)] = selectedLectures.filter(lecture => dayTime.test(lecture.曜日時限.slice(0, 2)))
+              .map(lec => lec.科目);
+            // 該当する講義が無い場合
+            if (mondayLecs[time.indexOf(period)] == undefined || mondayLecs[time.indexOf(period)] == null) {
+              mondayLecs[time.indexOf(period)] = '';
+            }
+          });
+          console.log('\nmondayLecsの中身：' + mondayLecs + '\n');
+          break;
+        case '火':
+          time.forEach(period => {
+            // 月1などを正規表現で定義
+            let dayTime = new RegExp(day + String(period));
+            // 曜日時限の最初の二文字で判別し、mondayLecsに順番に挿入
+            tuesdayLecs[time.indexOf(period)] = selectedLectures.filter(lecture => dayTime.test(lecture.曜日時限.slice(0, 2)))
+              .map(lec => lec.科目);
+            // 該当する講義が無い場合
+            if (tuesdayLecs[time.indexOf(period)] == undefined || mondayLecs[time.indexOf(period)] == null) {
+              tuesdayLecs[time.indexOf(period)] = '';
+            }
+          });
+          console.log('\ntuesdayLecsの中身：' + tuesdayLecs + '\n');
+          break;
+        case '水':
+          time.forEach(period => {
+            // 月1などを正規表現で定義
+            let dayTime = new RegExp(day + String(period));
+            // 曜日時限の最初の二文字で判別し、mondayLecsに順番に挿入
+            wednesdayLecs[time.indexOf(period)] = selectedLectures.filter(lecture => dayTime.test(lecture.曜日時限.slice(0, 2)))
+              .map(lec => lec.科目);
+            // 該当する講義が無い場合
+            if (wednesdayLecs[time.indexOf(period)] == undefined || mondayLecs[time.indexOf(period)] == null) {
+              wednesdayLecs[time.indexOf(period)] = '';
+            }
+          });
+          console.log('\nwednesdayLecsの中身：' + wednesdayLecs + '\n');
+          break;
+        case '木':
+          time.forEach(period => {
+            // 月1などを正規表現で定義
+            let dayTime = new RegExp(day + String(period));
+            // 曜日時限の最初の二文字で判別し、mondayLecsに順番に挿入
+            thursdayLecs[time.indexOf(period)] = selectedLectures.filter(lecture => dayTime.test(lecture.曜日時限.slice(0, 2)))
+              .map(lec => lec.科目);
+            // 該当する講義が無い場合
+            if (thursdayLecs[time.indexOf(period)] == undefined || mondayLecs[time.indexOf(period)] == null) {
+              thursdayLecs[time.indexOf(period)] = '';
+            }
+          });
+          console.log('\nthursdayLecsの中身：' + thursdayLecs + '\n');
+          break;
+        case '金':
+          time.forEach(period => {
+            // 月1などを正規表現で定義
+            let dayTime = new RegExp(day + String(period));
+            // 曜日時限の最初の二文字で判別し、mondayLecsに順番に挿入
+            fridayLecs[time.indexOf(period)] = selectedLectures.filter(lecture => dayTime.test(lecture.曜日時限.slice(0, 2)))
+              .map(lec => lec.科目);
+            // 該当する講義が無い場合
+            if (fridayLecs[time.indexOf(period)] == undefined || mondayLecs[time.indexOf(period)] == null) {
+              fridayLecs[time.indexOf(period)] = '';
+            }
+          });
+          console.log('\nfridayLecsの中身：' + fridayLecs + '\n');
+          break;
+        default:
+          break;
+      }
+    }
+    )
+    settableData([mondayLecs, tuesdayLecs, wednesdayLecs, thursdayLecs, fridayLecs]);
+  }
 
-    //データの呼び出し
-    //const showTableData = readTableData('selectedAll_LData');
+  useEffect(() => {
+    const arrangeFunc = async () => {
+      await new Promise(() => arrangeLectureData());
+    };
+    arrangeFunc();
+  }, [])
 
-    const [D1, setD1] = useState('');
-    const [D2, setD2] = useState("汽水域生態学");
-    const [D3, setD3] = useState("生命情報学");
-    const [D4, setD4] = useState("微生物実験");
-    const [D5, setD5] = useState("島根学");
-
-    //テーブルにおける軸の値
-    const tableHead1 = ['', '月', '火', '水', '木', '金'];
-    const tableHead2 = ['1限', '2限', '3限', '4限', '5限'];
-
-    const tableData = [
-        [D1, '2', '3', '4', '5'],
-        [D2, '2', '3', '4', '5'],
-        [D3, '2', '3', '4', '5'],
-        [D4, '2', '3', '4', '5'],
-        [D5, '2', '3', '4', '5'],
-    ];
-
-    return (
-        <>
-            {/* 時間割表 */}
-            < View style={styles.tableall} >
-                <Table borderStyle={styles.tableborder}>
-                    <Row data={tableHead1} style={styles.tableHead} textStyle={styles.table_dtext} />
-                    <TableWrapper style={styles.tablewrapper}>
-                        <Col data={tableHead2} style={styles.tabletitle} textStyle={styles.table_titletext} />
-                        <Rows data={tableData} flexArr={[1, 1, 1, 1, 1]} textStyle={styles.table_itext} numberOfLines={1} ellipsizeMode={'tail'} />
-                    </TableWrapper>
-                </Table>
-            </View >
-
-            {/* 画面下(学部名表示)部分 */}
-            < View style={styles.bottom_horizen} >
-                <View style={styles.buttomwaku}>
-                    <Text style={styles.buttomwakutext}>{gakubuValue}</Text>
-                </View>
-                <TouchableOpacity style={styles.buttonsita} onPress={() => alert('aaa')}>
-                    <Text style={styles.buttomtext}>編集</Text>
-                </TouchableOpacity>
-            </View >
-        </>)
+  return (
+    <>
+    <ScrollView>
+      <View style={styles.tableContainer}>
+        {/* 時間割表 */}
+        < View style={styles.tableall} >
+          <Table borderStyle={styles.tableborder}>
+              <Row data={tableHead1} textStyle={styles.table_dtext} flexArr={ [1, 2, 2, 2, 2, 2] }/>
+            <TableWrapper style={{ flexDirection: 'row' }}>
+              <TableWrapper style={styles.tableLeftwrapper}>
+                <Col data={tableHead2} style={styles.tableSideTitle} textStyle={styles.table_titletext} heightArr={[80, 80, 80, 80, 80]} />
+              </TableWrapper>
+              <TableWrapper style={styles.tableRightwrapper}>
+                <Cols data={tableData} style={styles.tableContent} textStyle={styles.table_itext} heightArr={[80, 80, 80, 80, 80]} />
+              </TableWrapper>
+            </TableWrapper>
+          </Table>
+        </View >
+      </View>
+    </ScrollView>
+    {/* 画面下(学部名表示)部分 */ }
+  <TouchableOpacity style={styles.buttonsita}>
+    <Text style={styles.buttomtext}>編集</Text>
+  </TouchableOpacity>
+  </>
+  )
 }
 
 const styles = StyleSheet.create({
-    tableall: {
-        width: "100%",
-        flex: 8,
-        paddingTop: 20,
-        backgroundColor: '#fff',
-    },
-    tableborder: {
-        borderWidth: 2,
-        borderColor: 'black',
-    },
-    table_dtext: {
-        fontSize: 25,
-        paddingVertical: '10%',
-        textAlign: 'center',
-        fontWeight: 'bold',
-    },
-    tablewrapper: {
-        flexDirection: 'row',
-    },
-    tabletitle: {
-        backgroundColor: '#d7e0ff',
-    },
-    table_titletext: {
-        fontSize: 25,
-        textAlign: 'center',
-        fontWeight: 'bold'
-    },
-    table_itext: {
-        fontWeight: 'bold',
-        fontSize: 15,
-        paddingVertical: '65%',
-        textAlign: 'center',
-    },
-    bottom_horizen: {
-        flexDirection: 'row',
-        width: '100%',
-        flex: 1,
-    },
-    buttomwaku: {
-        color: 'black',
-        borderWidth: 2,
-        borderColor: 'black',
-        backgroundColor: '#d7e0ff',
-        borderRadius: 10,
-        marginLeft: 40,
-        marginRight: 100,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    buttomwakutext: {
-        fontWeight: 'bold',
-        color: 'black',
-        fontSize: 20,
-        paddingHorizontal: 5,
-    },
-    buttomtext: {
-        fontSize: 20,
-        fontWeight: 'bold'
-    },
-    buttonsita: {
-        backgroundColor: '#d7e0ff',
-        borderRadius: 10,
-        borderColor: 'black',
-        borderWidth: 2,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingHorizontal: 20,
-    }
-
-
-
+  tableContainer: {
+  },
+  tableall: {
+    flex: 10,
+    padding: 5,
+    backgroundColor: '#fff',
+  },
+  tableborder: {
+    borderWidth: 1,
+    borderColor:  '#dcdcdc',
+  },
+  table_dtext: {
+    fontSize: 20,
+    paddingVertical: '5%',
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  tableLeftwrapper: {
+    flex: 1,
+  },
+  tableRightwrapper: {
+    flex: 10,
+  },
+  tableSideTitle: {
+    flex: 1,
+    backgroundColor: '#167F92',
+  },
+  tableContent: {
+    flex: 5,
+  },
+  table_titletext: {
+    color: 'white',
+    fontSize: 20,
+    textAlign: 'center',
+  },
+  table_itext: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  // ボタンデザイン
+  buttomtext: {
+    textAlign: 'center',
+    fontSize: 20,
+  },
+  buttonsita: {
+    width: '40%',
+    backgroundColor: '#d7e0ff',
+    borderRadius: 10,
+    borderColor:  '#dcdcdc',
+    borderWidth: 1,
+  },
 })
