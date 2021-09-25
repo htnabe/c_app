@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //データの読み出し
-export async function ReadTableData(rd) {
+export async function readTableData(rd) {
 
   const gbi = await AsyncStorage.getItem(rd);
 

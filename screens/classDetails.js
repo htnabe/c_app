@@ -7,39 +7,45 @@ export default function classDetails({ navigation, lectureInfo }) {
   const { 科目 } = lectureInfo.params;
   const { 担当 } = lectureInfo.params;
   const { 教室名 } = lectureInfo.params;
+  const { 曜日時限 } = lectureInfo.params;
   let balnkClass = null;
   if (教室名 == '') {
     balnkClass = '未定またはオンライン講義です';
   } else {
     balnkClass = 教室名;
   }
+  const classDayTime = 曜日時限.split(',')
+  const daytime_1 = classDayTime[0] + 'コマ';
+  const daytime_2 = classDayTime[1] + 'コマ';
+  const showDaytime = daytime_1 + '・' + daytime_2;
+
 
   return (
     <ScrollView>
-    <View style={styles.containerClass}>
-      <View style={styles.classTapframe}>
-        <Text style={styles.classTapHeader}>講義名</Text>
-        <Text style={styles.classTapText}>{科目}</Text>
+      <View style={styles.containerClass}>
+        <View style={styles.classTapframe}>
+          <Text style={styles.classTapHeader}>講義名</Text>
+          <Text style={styles.classTapText}>{科目}</Text>
+        </View>
+        <View style={styles.classTapframe}>
+          <Text style={styles.classTapHeader}>担当者</Text>
+          <Text style={styles.classTapText}>{担当}</Text>
+        </View>
+        <View style={styles.classTapframe}>
+          <Text style={styles.classTapHeader}>曜日・時限</Text>
+          <Text style={styles.classTapText}>{showDaytime}</Text>
+        </View>
+        <View style={styles.classTapframe}>
+          <Text style={styles.classTapHeader}>教室名</Text>
+          <Text style={styles.classTapText}>{balnkClass}</Text>
+        </View>
+        <View style={styles.ctTuikaContainer}>
+          <TouchableOpacity style={styles.ctTuikaBtn} onPress={() => navigation.goBack()}>
+            <Text style={styles.ctTuikaBtnText}>戻る</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={styles.classTapframe}>
-        <Text style={styles.classTapHeader}>担当者</Text>
-        <Text style={styles.classTapText}>{担当}</Text>
-      </View>
-      <View style={styles.classTapframe}>
-        <Text style={styles.classTapHeader}>曜日・時限</Text>
-        <Text style={styles.classTapText}>あとで調整</Text>
-      </View>
-      <View style={styles.classTapframe}>
-        <Text style={styles.classTapHeader}>教室名</Text>
-        <Text style={styles.classTapText}>{balnkClass}</Text>
-      </View>
-      <View style={styles.ctTuikaContainer}>
-        <TouchableOpacity style={styles.ctTuikaBtn} onPress={() => navigation.goBack()}>
-          <Text style={styles.ctTuikaBtnText}>戻る</Text>
-        </TouchableOpacity>
-      </View>
-      </View>
-      </ScrollView>
+    </ScrollView>
   );
 }
 
