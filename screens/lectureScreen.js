@@ -10,10 +10,9 @@ import HomeScreenTable from './classTable';
 export default function lectureScreen({ navigation }) {
   const [inputedKeyWord, setinputedLectureInfo] = useState();
 
-  //ポップアップ
-  HomeScreenPopup();
   return (
     <View style={styles.container}>
+      <HomeScreenPopup />
       <View style={styles.upper}>
           <TextInput
             style={styles.input}
