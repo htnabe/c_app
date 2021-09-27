@@ -1,14 +1,26 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { Table, Row, Cols, TableWrapper, Col } from 'react-native-table-component';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native';
 
 export default function homeScreenProp() {
-  //テーブル軸の値
+  const navigation = useNavigation();
+
+  //テーブル軸の値などの初期化
   const tableHead1 = ['', '月', '火', '水', '木', '金'];
   const tableHead2 = ['1', '2', '3', '4', '5'];
-  const [tableData, settableData] = useState([['Mon', '', '', '', ''], ['Tue', '', '', '', ''], ['Wed', '', '', '', ''], ['Thurs', '', '', '', ''], ['Fri', '', '', '', '']]);
-  const [fakeTableData, setfakeTableData] = useState([['月', '', '', '', ''], ['1', '', '', '', ''], ['2', '', '', '', ''], ['3', '', '', '', ''], ['4', '', '', '', '']]);
+  let mondayLecs = new Array(5);
+  let tuesdayLecs = new Array(5);
+  let wednesdayLecs = new Array(5);
+  let thursdayLecs = new Array(5);
+  let fridayLecs = new Array(5);
+  const [tableData, settableData] = useState([mondayLecs, tuesdayLecs, wednesdayLecs, thursdayLecs, fridayLecs]);
+
+  // 曜日・日時を判別するための配列
+  const days = ['月', '火', '水', '木', '金'];
+  const time = [1, 3, 5, 7, 9];
+
   // 選ばれた講義の情報（連想配列形式）を取得
   // const selectedLectures = readTableData('tableKey');
   // テスト用データ例
@@ -18,7 +30,7 @@ export default function homeScreenProp() {
     "学年": "2 ,3 ,4",
     "曜日時限": "月1, 月2",
     "時間割コード": "M532001",
-    "科目": "生活科内容構成研究",
+    "科目": "テストデータ１",
     "担当": "川路　澄人",
     "棟名": "",
     "教室名": ""
@@ -29,21 +41,21 @@ export default function homeScreenProp() {
     "学年": "2 ,3 ,4",
     "曜日時限": "月3, 月4",
     "時間割コード": "M532011",
-    "科目": "生活科内容構成研究",
+    "科目": "めちゃくちゃ長い授業目",
     "担当": "川路　澄人",
     "棟名": "",
     "教室名": ""
   }];
 
-  // 曜日・日時を判別するための配列
-  const days = ['月', '火', '水', '木', '金'];
-  const time = [1, 3, 5, 7, 9];
-
-  let mondayLecs = ['Mon', '', '', '', ''];
-  let tuesdayLecs = ['Mon', '', '', '', ''];
-  let wednesdayLecs = ['Mon', '', '', '', ''];
-  let thursdayLecs = ['Mon', '', '', '', ''];
-  let fridayLecs = ['Mon', '', '', '', ''];
+  const navigatoToDetailScreen = (lectureName) => {
+    // lectureDataは配列
+    const lectureData = selectedLectures.filter(item => item.科目 == lectureName);
+    return (
+      <TouchableOpacity onPress={() => navigation.navigate("Home_LectureInfo" , lectureData[0])}>
+        <Text>{lectureName}</Text>
+      </TouchableOpacity>
+    );
+  }
 
   function arrangeLectureData() {
     if (selectedLectures == "") {
@@ -54,17 +66,19 @@ export default function homeScreenProp() {
       switch (day) {
         case '月':
           time.forEach(period => {
-            // 月1などを正規表現で定義
+            // "月1"などを正規表現で定義
             let dayTime = new RegExp(day + String(period));
             // 曜日時限の最初の二文字で判別し、mondayLecsに順番に挿入
             mondayLecs[time.indexOf(period)] = selectedLectures.filter(lecture => dayTime.test(lecture.曜日時限.slice(0, 2)))
               .map(lec => lec.科目);
             // 該当する講義が無い場合
-            if (mondayLecs[time.indexOf(period)] == undefined || mondayLecs[time.indexOf(period)] == null) {
+            if (mondayLecs[time.indexOf(period)] == undefined || mondayLecs[time.indexOf(period)] == null ) {
               mondayLecs[time.indexOf(period)] = '';
             }
+            else if (mondayLecs[time.indexOf(period)] != ''){
+              mondayLecs[time.indexOf(period)] = navigatoToDetailScreen(mondayLecs[time.indexOf(period)]);
+            }
           });
-          console.log('\nmondayLecsの中身：' + mondayLecs + '\n');
           break;
         case '火':
           time.forEach(period => {
@@ -78,7 +92,6 @@ export default function homeScreenProp() {
               tuesdayLecs[time.indexOf(period)] = '';
             }
           });
-          console.log('\ntuesdayLecsの中身：' + tuesdayLecs + '\n');
           break;
         case '水':
           time.forEach(period => {
@@ -92,7 +105,6 @@ export default function homeScreenProp() {
               wednesdayLecs[time.indexOf(period)] = '';
             }
           });
-          console.log('\nwednesdayLecsの中身：' + wednesdayLecs + '\n');
           break;
         case '木':
           time.forEach(period => {
@@ -106,7 +118,6 @@ export default function homeScreenProp() {
               thursdayLecs[time.indexOf(period)] = '';
             }
           });
-          console.log('\nthursdayLecsの中身：' + thursdayLecs + '\n');
           break;
         case '金':
           time.forEach(period => {
@@ -120,7 +131,6 @@ export default function homeScreenProp() {
               fridayLecs[time.indexOf(period)] = '';
             }
           });
-          console.log('\nfridayLecsの中身：' + fridayLecs + '\n');
           break;
         default:
           break;

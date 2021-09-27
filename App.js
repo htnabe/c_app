@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SearchResult from './screens/searchResult';
 import ClassDetails from './screens/classDetails';
 import LectureScreen from './screens/lectureScreen'
+import HomeLectureDetail from './screens/homeLectureDetail';
 
 // ナビゲーションの宣言
 const Stack = createNativeStackNavigator();
@@ -14,6 +15,12 @@ const Stack = createNativeStackNavigator();
 function lectureHome() {
   const navigation = useNavigation();
   return <LectureScreen navigation={navigation} />
+};
+
+//  ホーム画面用講義情報画面
+function lectureHomeDetail() {
+  const navigation = useNavigation();
+  return <HomeLectureDetail navigation={navigation} />
 };
 
 //  検索結果画面
@@ -33,6 +40,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home_Screen">
         <Stack.Screen name="Home_Screen" component={lectureHome} />
+        <Stack.Screen name="Home_LectureInfo" component={lectureHomeDetail} />
         <Stack.Screen name="Search_Screen" component={searchResultScreen} />
         <Stack.Screen name="Classtap_Screen" component={classDetailScreen} />
       </Stack.Navigator>
