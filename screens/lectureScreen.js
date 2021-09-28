@@ -1,18 +1,30 @@
-import React, {useState} from 'react';
-import { SafeAreaView, StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
 
-// 表示パーツのインポート
+// 表示パーツと汎用関数のインポート
 import HomeScreenPopup from '../screens/homeScreenPopup';
 import HomeScreenTable from './classTable';
-
+import { readTableData } from '../holddeta/ReadTableData'
 
 //時間割管理ホーム画面
 export default function lectureScreen({ navigation }) {
   const [inputedKeyWord, setinputedLectureInfo] = useState();
+  const [initialBoot, setinitialBoot] = useState(true);
+
+  useEffect(() => {
+    // 初回起動かどうか確認
+    const checkFirstLaunch = async () => {
+      const firstLaunchFlag = await readTableData('firstLaunch');
+      if (firstLaunchFlag == 'alreadyLaunched') {
+        setinitialBoot(false);
+      }
+    };
+    checkFirstLaunch();
+  }, [])
 
   return (
     <View style={styles.container}>
-      <HomeScreenPopup />
+      {initialBoot && <HomeScreenPopup />}
       <View style={styles.upper}>
           <TextInput
             style={styles.input}
