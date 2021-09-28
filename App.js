@@ -17,7 +17,7 @@ function lectureHome() {
   return <LectureScreen navigation={navigation} />
 };
 
-//  ホーム画面用講義情報画面
+//  ホーム画面での講義情報画面
 function lectureHomeDetail() {
   const navigation = useNavigation();
   return <HomeLectureDetail navigation={navigation} />
