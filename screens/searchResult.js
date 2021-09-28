@@ -15,7 +15,6 @@ export default function searchScreen() {
   const navigation = useNavigation();
 
   getListData = async () => {
-    console.log('渡されたキーワード：' + route.params.keyWord + '\n');
     // 検索実行
     const searchedLecture = await SearchLecture(route.params.keyWord);
     // "check" = falseの項を追加
