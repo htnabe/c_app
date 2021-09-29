@@ -14,11 +14,62 @@ export default function classDetails({ navigation, lectureInfo }) {
   } else {
     balnkClass = 教室名;
   }
-  const classDayTime = 曜日時限.split(',')
-  const daytime_1 = classDayTime[0] + 'コマ';
-  const daytime_2 = classDayTime[1] + 'コマ';
-  const showDaytime = daytime_1 + '・' + daytime_2;
 
+  //全角・半角空白除去処理
+  let dayTime = null;
+  if (曜日時限.search(/..\s+/g) == true) {
+    dayTime = 曜日時限.replace(/\s+/g, '');
+  } else {
+    dayTime = 曜日時限;
+  }
+
+  //, ・除去
+  let classDayTime = null;
+  if (dayTime.indexOf(',')) {
+    classDayTime = dayTime.split(',');
+  } else if (dayTime.indexOf('・')) {
+    classDayTime = dayTime.split('・')
+  }
+
+  //曜日時限 表示
+  let showDayTime = null;
+  const DaytimeLength = classDayTime.length;
+  if (曜日時限 == '他') {
+    showDayTime = '他';
+  } else if (DaytimeLength == 2) {
+    const dayTime_1 = classDayTime[0] + 'コマ';
+    const dayTime_2 = classDayTime[1] + 'コマ';
+    showDayTime = dayTime_1 + '・' + dayTime_2;
+  } else if (DaytimeLength == 3) {
+    const dayTime_1 = classDayTime[0] + 'コマ';
+    const dayTime_2 = classDayTime[1] + 'コマ';
+    const dayTime_3 = classDayTime[2] + 'コマ';
+    showDayTime = dayTime_1 + '・' + dayTime_2 + '・' + dayTime_3;
+  } else if (DaytimeLength == 4) {
+    const dayTime_1 = classDayTime[0] + 'コマ';
+    const dayTime_2 = classDayTime[1] + 'コマ';
+    const dayTime_3 = classDayTime[2] + 'コマ';
+    const dayTime_4 = classDayTime[3] + 'コマ';
+    showDayTime = dayTime_1 + '・' + dayTime_2 + '・' + dayTime_3 + '・' + dayTime_4;
+  } else if (DaytimeLength == 5) {
+    const dayTime_1 = classDayTime[0] + 'コマ';
+    const dayTime_2 = classDayTime[1] + 'コマ';
+    const dayTime_3 = classDayTime[2] + 'コマ';
+    const dayTime_4 = classDayTime[3] + 'コマ';
+    const dayTime_5 = classDayTime[4] + 'コマ';
+    showDayTime = dayTime_1 + '・' + dayTime_2 + '・' + dayTime_3 + '・' + dayTime_4 + '・' + dayTime_5;
+  } else if (DaytimeLength == 6) {
+    const dayTime_1 = classDayTime[0] + 'コマ';
+    const dayTime_2 = classDayTime[1] + 'コマ';
+    const dayTime_3 = classDayTime[2] + 'コマ';
+    const dayTime_4 = classDayTime[3] + 'コマ';
+    const dayTime_5 = classDayTime[4] + 'コマ';
+    const dayTime_6 = classDayTime[5] + 'コマ';
+    showDayTime = dayTime_1 + '・' + dayTime_2 + '・' + dayTime_3 + '・' + dayTime_4 + '・' + dayTime_5 + '・' + dayTime_6;
+  } else {
+    //曜日時限に文章記入の場合
+    showDayTime = 曜日時限;
+  }
 
   return (
     <ScrollView>
@@ -33,7 +84,7 @@ export default function classDetails({ navigation, lectureInfo }) {
         </View>
         <View style={styles.classTapframe}>
           <Text style={styles.classTapHeader}>曜日・時限</Text>
-          <Text style={styles.classTapText}>{showDaytime}</Text>
+          <Text style={styles.classTapText}>{showDayTime}</Text>
         </View>
         <View style={styles.classTapframe}>
           <Text style={styles.classTapHeader}>教室名</Text>
