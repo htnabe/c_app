@@ -1,10 +1,11 @@
 // Flatlistのパフォーマンス改善が必須
-
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet, View, Text, TouchableOpacity, FlatList, TouchableHighlight } from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import SearchLecture from '../appFunction/searchLecture';
 import { useRoute, useNavigation } from '@react-navigation/native';
+
+import {saveData} from '../holddeta/saveData'
 
 export default function searchScreen() {
 
@@ -59,9 +60,9 @@ export default function searchScreen() {
   );
 
   // homeスクリーンへデータを渡す処理
-  const passFilteredData = () => {
-    const selectedLecture = searchResultsData.filter((lecture) => lecture.checked);
-    return selectedLecture;
+  const storeFilteredData = () => {
+    const selectedLecture = JSON.stringify(searchResultsData.filter((lecture) => lecture.checked));
+    saveData(['tableKey', selectedLecture])
   }
 
   return (
@@ -83,7 +84,7 @@ export default function searchScreen() {
         keyExtractor={item => item.時間割コード}
       />
       <View style={styles.searchTuikacontainer}>
-        <TouchableOpacity style={styles.searchTuikaBtn} onPress={() => navigation.navigate('Home_Screen', passFilteredData())}>
+        <TouchableOpacity style={styles.searchTuikaBtn} onPress={() => { navigation.navigate('Home_Screen'); storeFilteredData();}}>
           <Text style={styles.searchTuikaBtnText}>時間割に追加</Text>
         </TouchableOpacity>
       </View>

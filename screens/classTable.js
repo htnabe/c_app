@@ -4,6 +4,7 @@ import { Table, Row, Cols, TableWrapper, Col } from 'react-native-table-componen
 import { StyleSheet, View, Text, TouchableOpacity, TouchableHighlight } from 'react-native';
 import { ScrollView } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
+import { readTableData } from '../holddeta/ReadTableData';
 
 export default function homeScreenProp() {
   const navigation = useNavigation();
@@ -16,7 +17,7 @@ export default function homeScreenProp() {
   let wednesdayLecs = new Array(5);
   let thursdayLecs = new Array(5);
   let fridayLecs = new Array(5);
-  const [tableData, settableData] = useState([mondayLecs, tuesdayLecs, wednesdayLecs, thursdayLecs, fridayLecs]);
+  const [tableData, settableData] = useState();
   let flatlistItem = new Array;
   const [flatlistData, setflatlistData] = useState();
 
@@ -24,56 +25,7 @@ export default function homeScreenProp() {
   const days = ['月', '火', '水', '木', '金', '他'];
   const time = [1, 3, 5, 7, 9];
 
-  // 選ばれた講義の情報（連想配列形式）を取得
-  // const selectedLectures = readTableData('tableKey');
-  // テスト用データ例
-  const selectedLectures = [{
-    "時間割所属": "教育学部",
-    "開講": "前期",
-    "学年": "2 ,3 ,4",
-    "曜日時限": "月1, 月2",
-    "時間割コード": "M532001",
-    "科目": "テストデータ１",
-    "担当": "川路　澄人",
-    "棟名": "",
-    "教室名": ""
-  },
-  {
-    "時間割所属": "教育学部",
-    "開講": "前期",
-    "学年": "2 ,3 ,4",
-    "曜日時限": "月3, 月4",
-    "時間割コード": "M1011",
-    "科目": "めちゃくちゃ長い授業目",
-    "担当": "川路　澄人",
-    "棟名": "",
-    "教室名": ""
-  },
-  {
-    "時間割所属": "教育学部",
-    "開講": "前期",
-    "学年": "2 ,3 ,4",
-    "曜日時限": "他",
-    "時間割コード": "M56011",
-    "科目": "集中1",
-    "担当": "川路　澄人",
-    "棟名": "テスト",
-    "教室名": ""
-  },
-  {
-    "時間割所属": "教育学部",
-    "開講": "前期",
-    "学年": "2 ,3 ,4",
-    "曜日時限": "他",
-    "時間割コード": "M5111",
-    "科目": "集中2",
-    "担当": "川路　澄人",
-    "棟名": "テスト",
-    "教室名": ""
-  },
-  ];
-
-  const navigatoToDetailScreen = (lectureName) => {
+  const navigatoToDetailScreen = (lectureName, selectedLectures) => {
     // lectureDataは配列
     const lectureData = selectedLectures.filter(item => item.科目 == lectureName);
     return (
@@ -83,104 +35,108 @@ export default function homeScreenProp() {
     );
   }
 
-  function arrangeLectureData() {
-    if (selectedLectures == "") {
-      return;
-    }
-
-    days.forEach(day => {
-      switch (day) {
-        case '月':
-          time.forEach(period => {
-            // "月1"などを正規表現で定義
-            let dayTime = new RegExp(day + String(period));
-            // 曜日時限の最初の二文字で判別し、mondayLecsに順番に挿入
-            mondayLecs[time.indexOf(period)] = selectedLectures.filter(lecture => dayTime.test(lecture.曜日時限.slice(0, 2)))
-              .map(lec => lec.科目);
+  function arrangeLectureData(selectedLectures) {
+    try {
+      console.log('arrangeLectureData関数\n' + 'selectedLecturesの中身：' + JSON.stringify(selectedLectures) +'\n')
+      days.forEach(day => {
+        switch (day) {
+          case '月':
+            time.forEach(period => {
+              // "月1"などを正規表現で定義
+              let dayTime = new RegExp(day + String(period));
+              // 曜日時限の最初の二文字で判別し、mondayLecsに順番に挿入
+              mondayLecs[time.indexOf(period)] = selectedLectures.filter(lecture => dayTime.test(lecture.曜日時限.slice(0, 2)))
+                .map(lec => lec.科目);
+              // 該当する講義が無い場合
+              if (mondayLecs[time.indexOf(period)] == undefined || mondayLecs[time.indexOf(period)] == null) {
+                mondayLecs[time.indexOf(period)] = '';
+              }
+              else if (mondayLecs[time.indexOf(period)] != '') {
+                mondayLecs[time.indexOf(period)] = navigatoToDetailScreen(mondayLecs[time.indexOf(period)], selectedLectures);
+              }
+            });
+            break;
+          case '火':
+            time.forEach(period => {
+              // 月1などを正規表現で定義
+              let dayTime = new RegExp(day + String(period));
+              // 曜日時限の最初の二文字で判別し、mondayLecsに順番に挿入
+              tuesdayLecs[time.indexOf(period)] = selectedLectures.filter(lecture => dayTime.test(lecture.曜日時限.slice(0, 2)))
+                .map(lec => lec.科目);
+              // 該当する講義が無い場合
+              if (tuesdayLecs[time.indexOf(period)] == undefined || mondayLecs[time.indexOf(period)] == null) {
+                tuesdayLecs[time.indexOf(period)] = '';
+              }
+            });
+            break;
+          case '水':
+            time.forEach(period => {
+              // 月1などを正規表現で定義
+              let dayTime = new RegExp(day + String(period));
+              // 曜日時限の最初の二文字で判別し、mondayLecsに順番に挿入
+              wednesdayLecs[time.indexOf(period)] = selectedLectures.filter(lecture => dayTime.test(lecture.曜日時限.slice(0, 2)))
+                .map(lec => lec.科目);
+              // 該当する講義が無い場合
+              if (wednesdayLecs[time.indexOf(period)] == undefined || mondayLecs[time.indexOf(period)] == null) {
+                wednesdayLecs[time.indexOf(period)] = '';
+              }
+            });
+            break;
+          case '木':
+            time.forEach(period => {
+              // 月1などを正規表現で定義
+              let dayTime = new RegExp(day + String(period));
+              // 曜日時限の最初の二文字で判別し、mondayLecsに順番に挿入
+              thursdayLecs[time.indexOf(period)] = selectedLectures.filter(lecture => dayTime.test(lecture.曜日時限.slice(0, 2)))
+                .map(lec => lec.科目);
+              // 該当する講義が無い場合
+              if (thursdayLecs[time.indexOf(period)] == undefined || mondayLecs[time.indexOf(period)] == null) {
+                thursdayLecs[time.indexOf(period)] = '';
+              }
+            });
+            break;
+          case '金':
+            time.forEach(period => {
+              // 月1などを正規表現で定義
+              let dayTime = new RegExp(day + String(period));
+              // 曜日時限の最初の二文字で判別し、mondayLecsに順番に挿入
+              fridayLecs[time.indexOf(period)] = selectedLectures.filter(lecture => dayTime.test(lecture.曜日時限.slice(0, 2)))
+                .map(lec => lec.科目);
+              // 該当する講義が無い場合
+              if (fridayLecs[time.indexOf(period)] == undefined || mondayLecs[time.indexOf(period)] == null) {
+                fridayLecs[time.indexOf(period)] = '';
+              }
+            });
+            break;
+          case '他':
+            // '他'を正規表現で定義
+            let dayTime = new RegExp(day);
+            flatlistItem = selectedLectures.filter(lecture => dayTime.test(lecture.曜日時限))
+              .map(lec => lec);
             // 該当する講義が無い場合
-            if (mondayLecs[time.indexOf(period)] == undefined || mondayLecs[time.indexOf(period)] == null) {
-              mondayLecs[time.indexOf(period)] = '';
+            if (flatlistItem == undefined || flatlistItem == null) {
+              flatlistItem = [];
             }
-            else if (mondayLecs[time.indexOf(period)] != '') {
-              mondayLecs[time.indexOf(period)] = navigatoToDetailScreen(mondayLecs[time.indexOf(period)]);
-            }
-          });
-          break;
-        case '火':
-          time.forEach(period => {
-            // 月1などを正規表現で定義
-            let dayTime = new RegExp(day + String(period));
-            // 曜日時限の最初の二文字で判別し、mondayLecsに順番に挿入
-            tuesdayLecs[time.indexOf(period)] = selectedLectures.filter(lecture => dayTime.test(lecture.曜日時限.slice(0, 2)))
-              .map(lec => lec.科目);
-            // 該当する講義が無い場合
-            if (tuesdayLecs[time.indexOf(period)] == undefined || mondayLecs[time.indexOf(period)] == null) {
-              tuesdayLecs[time.indexOf(period)] = '';
-            }
-          });
-          break;
-        case '水':
-          time.forEach(period => {
-            // 月1などを正規表現で定義
-            let dayTime = new RegExp(day + String(period));
-            // 曜日時限の最初の二文字で判別し、mondayLecsに順番に挿入
-            wednesdayLecs[time.indexOf(period)] = selectedLectures.filter(lecture => dayTime.test(lecture.曜日時限.slice(0, 2)))
-              .map(lec => lec.科目);
-            // 該当する講義が無い場合
-            if (wednesdayLecs[time.indexOf(period)] == undefined || mondayLecs[time.indexOf(period)] == null) {
-              wednesdayLecs[time.indexOf(period)] = '';
-            }
-          });
-          break;
-        case '木':
-          time.forEach(period => {
-            // 月1などを正規表現で定義
-            let dayTime = new RegExp(day + String(period));
-            // 曜日時限の最初の二文字で判別し、mondayLecsに順番に挿入
-            thursdayLecs[time.indexOf(period)] = selectedLectures.filter(lecture => dayTime.test(lecture.曜日時限.slice(0, 2)))
-              .map(lec => lec.科目);
-            // 該当する講義が無い場合
-            if (thursdayLecs[time.indexOf(period)] == undefined || mondayLecs[time.indexOf(period)] == null) {
-              thursdayLecs[time.indexOf(period)] = '';
-            }
-          });
-          break;
-        case '金':
-          time.forEach(period => {
-            // 月1などを正規表現で定義
-            let dayTime = new RegExp(day + String(period));
-            // 曜日時限の最初の二文字で判別し、mondayLecsに順番に挿入
-            fridayLecs[time.indexOf(period)] = selectedLectures.filter(lecture => dayTime.test(lecture.曜日時限.slice(0, 2)))
-              .map(lec => lec.科目);
-            // 該当する講義が無い場合
-            if (fridayLecs[time.indexOf(period)] == undefined || mondayLecs[time.indexOf(period)] == null) {
-              fridayLecs[time.indexOf(period)] = '';
-            }
-          });
-          break;
-        case '他':
-          // '他'を正規表現で定義
-          let dayTime = new RegExp(day);
-          flatlistItem = selectedLectures.filter(lecture => dayTime.test(lecture.曜日時限))
-            .map(lec => lec);
-          // 該当する講義が無い場合
-          if (flatlistItem == undefined || flatlistItem == null) {
-            flatlistItem = [];
-          }
-          break;
-        default:
-          break;
+            break;
+          default:
+            break;
+        }
       }
+      )
+      settableData([mondayLecs, tuesdayLecs, wednesdayLecs, thursdayLecs, fridayLecs]);
+      setflatlistData(flatlistItem);
+    } catch (error) {
+      console.log('ファイル名：classTable\n' + 'エラー内容：' + error + '\n');
     }
-    )
-    settableData([mondayLecs, tuesdayLecs, wednesdayLecs, thursdayLecs, fridayLecs]);
-    setflatlistData(flatlistItem);
   }
 
+  // 初回描画時に実行
   useEffect(() => {
     const arrangeFunc = async () => {
-      await new Promise(() => arrangeLectureData());
-    };
+      let storedLectureData = await readTableData('tableKey');
+      storedLectureData = JSON.parse(storedLectureData);
+      await new Promise(() => arrangeLectureData(storedLectureData));
+    }
     arrangeFunc();
   }, [])
 

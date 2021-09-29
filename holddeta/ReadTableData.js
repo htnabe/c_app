@@ -2,19 +2,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //データの読み出し
 export async function readTableData(rd) {
-
-  const gbi = await AsyncStorage.getItem(rd);
-
   try {
+    const gbi = await AsyncStorage.getItem(rd);
     if (gbi != null) {
-      alert('読み出し成功')
+      console.log('ファイル名：ReadTableData.js\n読み出し成功\n');
       return gbi;
     } else {
-      alert('値無し')
-      return "";
+      console.log('ファイル名：ReadTableData.js\n値無し\n');
+      return null;
     }
   } catch (error) {
-    alert('エラー発生')
-    alert(error)
+    console.log('ファイル名：ReadTableData.js\nエラー発生\n' + error);
   }
 }
