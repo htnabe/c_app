@@ -5,6 +5,7 @@ import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-nativ
 import HomeScreenPopup from '../screens/homeScreenPopup';
 import HomeScreenTable from './classTable';
 import { readTableData } from '../holddeta/ReadTableData'
+import { ScrollView } from 'react-native-gesture-handler';
 
 //時間割管理ホーム画面
 export default function lectureScreen({ navigation }) {

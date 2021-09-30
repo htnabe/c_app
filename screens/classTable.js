@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { Table, Row, Cols, TableWrapper, Col } from 'react-native-table-component';
 import { StyleSheet, View, Text, TouchableOpacity, TouchableHighlight } from 'react-native';
-import { ScrollView } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { readTableData } from '../holddeta/ReadTableData';
 
 export default function homeScreenProp() {
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
 
   //テーブル軸の値などの初期化
   const tableHead1 = ['', '月', '火', '水', '木', '金'];
@@ -37,7 +37,6 @@ export default function homeScreenProp() {
 
   function arrangeLectureData(selectedLectures) {
     try {
-      console.log('arrangeLectureData関数\n' + 'selectedLecturesの中身：' + JSON.stringify(selectedLectures) +'\n')
       days.forEach(day => {
         switch (day) {
           case '月':
@@ -67,6 +66,9 @@ export default function homeScreenProp() {
               if (tuesdayLecs[time.indexOf(period)] == undefined || mondayLecs[time.indexOf(period)] == null) {
                 tuesdayLecs[time.indexOf(period)] = '';
               }
+              else if (tuesdayLecs[time.indexOf(period)] != '') {
+                tuesdayLecs[time.indexOf(period)] = navigatoToDetailScreen(tuesdayLecs[time.indexOf(period)], selectedLectures);
+              }
             });
             break;
           case '水':
@@ -79,6 +81,9 @@ export default function homeScreenProp() {
               // 該当する講義が無い場合
               if (wednesdayLecs[time.indexOf(period)] == undefined || mondayLecs[time.indexOf(period)] == null) {
                 wednesdayLecs[time.indexOf(period)] = '';
+              }
+              else if (wednesdayLecs[time.indexOf(period)] != '') {
+                wednesdayLecs[time.indexOf(period)] = navigatoToDetailScreen(wednesdayLecs[time.indexOf(period)], selectedLectures);
               }
             });
             break;
@@ -93,6 +98,9 @@ export default function homeScreenProp() {
               if (thursdayLecs[time.indexOf(period)] == undefined || mondayLecs[time.indexOf(period)] == null) {
                 thursdayLecs[time.indexOf(period)] = '';
               }
+              else if (thursdayLecs[time.indexOf(period)] != '') {
+                thursdayLecs[time.indexOf(period)] = navigatoToDetailScreen(thursdayLecs[time.indexOf(period)], selectedLectures);
+              }
             });
             break;
           case '金':
@@ -105,6 +113,9 @@ export default function homeScreenProp() {
               // 該当する講義が無い場合
               if (fridayLecs[time.indexOf(period)] == undefined || mondayLecs[time.indexOf(period)] == null) {
                 fridayLecs[time.indexOf(period)] = '';
+              }
+              else if (fridayLecs[time.indexOf(period)] != '') {
+                fridayLecs[time.indexOf(period)] = navigatoToDetailScreen(fridayLecs[time.indexOf(period)], selectedLectures);
               }
             });
             break;
@@ -135,17 +146,19 @@ export default function homeScreenProp() {
     const arrangeFunc = async () => {
       let storedLectureData = await readTableData('tableKey');
       storedLectureData = JSON.parse(storedLectureData);
-      await new Promise(() => arrangeLectureData(storedLectureData));
+      if (storedLectureData != null) {
+        await new Promise(() => arrangeLectureData(storedLectureData));
+      }
     }
     arrangeFunc();
-  }, [])
+  }, [isFocused])
 
   const renderItem = ({ item }) => (
     <View style={{ flexDirection: 'row', alignItems: 'center', }}>
       <TouchableHighlight style={{ width: '80%' }} onPress={() => navigation.navigate("Classtap_Screen", item)}>
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={styles.otherLectureText}>{item.科目}</Text>
-            <Text style={styles.otherLectureText}>{item.担当}</Text>
+        <View style={{ flexDirection: 'row' }}>
+          <Text style={styles.otherLectureText}>{item.科目}</Text>
+          <Text style={styles.otherLectureText}>{item.担当}</Text>
         </View>
       </TouchableHighlight>
     </View>
@@ -153,36 +166,37 @@ export default function homeScreenProp() {
 
   return (
     <>
-      <ScrollView>
-        <View style={styles.tableContainer}>
-          {/* 時間割表 */}
-          < View style={styles.tableall} >
-            <Table borderStyle={styles.tableborder}>
-              <Row data={tableHead1} textStyle={styles.table_dtext} flexArr={[1, 2, 2, 2, 2, 2]} />
-              <TableWrapper style={{ flexDirection: 'row' }}>
-                <TableWrapper style={styles.tableLeftwrapper}>
-                  <Col data={tableHead2} style={styles.tableSideTitle} textStyle={styles.table_titletext} heightArr={[80, 80, 80, 80, 80]} />
-                </TableWrapper>
-                <TableWrapper style={styles.tableRightwrapper}>
-                  <Cols data={tableData} style={styles.tableContent} textStyle={styles.table_itext} heightArr={[80, 80, 80, 80, 80]} />
-                </TableWrapper>
-              </TableWrapper>
-            </Table>
-          </View >
-        </View>
-      </ScrollView>
-      <View style={styles.otherLectures}>
-        <Text style={styles.otherLectureTitle}>集中講義など</Text>
+      < View style={styles.tableall} >
         <FlatList
+          ListHeaderComponent={
+            <View style={styles.tableContainer}>
+              {/* 時間割表 */}
+              <Table borderStyle={styles.tableborder}>
+                <Row data={tableHead1} textStyle={styles.table_dtext} flexArr={[1, 2, 2, 2, 2, 2]} />
+                <TableWrapper style={{ flexDirection: 'row' }}>
+                  <TableWrapper style={styles.tableLeftwrapper}>
+                    <Col data={tableHead2} style={styles.tableSideTitle} textStyle={styles.table_titletext} heightArr={[80, 80, 80, 80, 80]} />
+                  </TableWrapper>
+                  <TableWrapper style={styles.tableRightwrapper}>
+                    <Cols data={tableData} style={styles.tableContent} textStyle={styles.table_itext} heightArr={[80, 80, 80, 80, 80]} />
+                  </TableWrapper>
+                </TableWrapper>
+              </Table>
+              <View style={styles.otherLectures}>
+                <Text style={styles.otherLectureTitle}>集中講義など</Text>
+              </View>
+            </View >
+          }
           data={flatlistData}
           renderItem={renderItem}
           keyExtractor={item => item.時間割コード}
+          ListFooterComponent={
+            < TouchableOpacity style={styles.buttonsita}>
+              <Text style={styles.buttomtext}>編集</Text>
+            </TouchableOpacity>
+          }
         />
       </View>
-      {/* 画面下(学部名表示)部分 */}
-      <TouchableOpacity style={styles.buttonsita}>
-        <Text style={styles.buttomtext}>編集</Text>
-      </TouchableOpacity>
     </>
   )
 }

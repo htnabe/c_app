@@ -1,17 +1,20 @@
 // Flatlistのパフォーマンス改善が必須
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet, View, Text, TouchableOpacity, FlatList, TouchableHighlight } from 'react-native';
+import { SafeAreaView, StyleSheet, View, Text, TouchableOpacity, FlatList, TouchableHighlight, ActivityIndicator, Alert } from 'react-native';
 import { CheckBox } from 'react-native-elements';
-import SearchLecture from '../appFunction/searchLecture';
 import { useRoute, useNavigation } from '@react-navigation/native';
 
-import {saveData} from '../holddeta/saveData'
+// 外部汎用関数のインポート
+import SearchLecture from '../appFunction/searchLecture';
+import { saveData } from '../holddeta/saveData';
+import DeleteDuplicateLecture from '../appFunction/deleteDuplicateLecture';
 
 export default function searchScreen() {
 
   // searchResultsData: 検索結果が入る
-  const [searchResultsData, setsearchResultsData] = useState([]);
+  const [searchResultsData, setsearchResultsData] = useState();
   const [isChecked, setisChecked] = useState(true);
+  const [isLoading, setisLoading] = useState(true);
   const route = useRoute();
   const navigation = useNavigation();
 
@@ -25,10 +28,11 @@ export default function searchScreen() {
 
   // マウント時のみ実行される
   useEffect(() => {
-    getListData();
+    route.params.keyWord && getListData();
+    setisLoading(false);
   }, []);
 
-   // チェックマークを付けたデータで "check" = true or falseを設定
+  // チェックマークを付けたデータで "check" = true or falseを設定
   const checkMark = (classId) => {
     const classIdNumber = searchResultsData.findIndex((id) => id.時間割コード == classId);
     let newData = searchResultsData;
@@ -38,7 +42,7 @@ export default function searchScreen() {
 
   const Item = ({ 科目, 担当 }) => (
     <View style={styles.itemSearch}>
-      <View style={{ flexDirection: 'row'}}>
+      <View style={{ flexDirection: 'row' }}>
         <Text style={styles.title}>{科目}</Text>
         <Text style={styles.teacher}>{担当}</Text>
       </View>
@@ -46,23 +50,57 @@ export default function searchScreen() {
   );
 
   const renderItem = ({ item }) => (
-    <View style={{ flexDirection: 'row' , alignItems: 'center', }}>
+    <View style={{ flexDirection: 'row', alignItems: 'center', }}>
       <TouchableHighlight style={{ width: '80%' }} onPress={() => navigation.navigate("Classtap_Screen", item)}>
         <Item 科目={item.科目} 担当={item.担当} />
       </TouchableHighlight>
-      <View style={{ borderWidth: 1, borderColor: '#dcdcdc', width: '100%', height: '100%'}}>
+      <View style={{ borderWidth: 1, borderColor: '#dcdcdc', width: '100%', height: '100%' }}>
         <CheckBox
           checked={item.checked}
-          onPress={() => { checkMark(item.時間割コード); setisChecked(!isChecked);}}
+          onPress={() => { checkMark(item.時間割コード); setisChecked(!isChecked); }}
         />
       </View>
     </View>
   );
 
-  // homeスクリーンへデータを渡す処理
-  const storeFilteredData = () => {
-    const selectedLecture = JSON.stringify(searchResultsData.filter((lecture) => lecture.checked));
-    saveData(['tableKey', selectedLecture])
+  // 重複するデータを削除し、ストレージへ必要なデータを保存する
+  const storeFilteredData = async () => {
+    if (searchResultsData != null && searchResultsData != undefined) {
+      let selectedLectures = searchResultsData.filter((lecture) => lecture.checked);
+      // 曜日・時限が重複するデータがある場合にアラート表示
+      let duplicateFlag = false;
+      selectedLectures.filter(lecture1 => {
+        selectedLectures.filter(lecture2 => {
+          if ((lecture1 != lecture2) && (lecture1.曜日時限.slice(0, 1) != '他') && (lecture1.曜日時限.slice(0, 2) == lecture2.曜日時限.slice(0, 2))) {
+            duplicateFlag = true;
+        }
+        })
+      });
+      if (duplicateFlag) {
+        Alert.alert(
+          '同じ曜日・時限の科目が複数選択されています。',
+          '選択する科目を訂正してください。',
+          [
+            { text: '戻る', onPress: () => console.log("戻る Pressed")},
+          ],
+          { cancelable: false });
+      }
+      else {
+        selectedLectures = await DeleteDuplicateLecture(selectedLectures);
+        await saveData(['tableKey', selectedLectures]);
+        navigation.navigate('Home_Screen');
+      }
+    }
+  }
+
+  if (!searchResultsData) {
+    return (
+      <ActivityIndicator
+        size="large"
+        animating={true}
+        color="rgba(137,232,207,100)"
+        />
+    );
   }
 
   return (
@@ -82,9 +120,10 @@ export default function searchScreen() {
         data={searchResultsData}
         renderItem={renderItem}
         keyExtractor={item => item.時間割コード}
+        ListEmptyComponent={<Text>該当データがありません</Text>}
       />
       <View style={styles.searchTuikacontainer}>
-        <TouchableOpacity style={styles.searchTuikaBtn} onPress={() => { navigation.navigate('Home_Screen'); storeFilteredData();}}>
+        <TouchableOpacity style={styles.searchTuikaBtn} onPress={() => { storeFilteredData(); }}>
           <Text style={styles.searchTuikaBtnText}>時間割に追加</Text>
         </TouchableOpacity>
       </View>
@@ -143,7 +182,7 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     flexDirection: 'row',
-},
+  },
   headerText: {
     marginVertical: 15,
     fontSize: 20,
