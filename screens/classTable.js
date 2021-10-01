@@ -154,15 +154,27 @@ export default function homeScreenProp() {
   }, [isFocused])
 
   const renderItem = ({ item }) => (
-    <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-      <TouchableHighlight style={{ width: '80%' }} onPress={() => navigation.navigate("Classtap_Screen", item)}>
-        <View style={{ flexDirection: 'row' }}>
+    <View style={{ alignItems: 'center', marginBottom: '2%' }}>
+      <TouchableOpacity style={{ width: '95%', marginBottom: '1%', }} onPress={() => navigation.navigate("Classtap_Screen", item)}>
+        <View style={{ flexDirection: 'row', flex: 1, }}>
           <Text style={styles.otherLectureText}>{item.科目}</Text>
           <Text style={styles.otherLectureText}>{item.担当}</Text>
         </View>
-      </TouchableHighlight>
+      </TouchableOpacity>
     </View>
   );
+
+  const itemSeparator = () => {
+    return (
+      <View
+        style={{
+          height: 1,
+          marginHorizontal: '1%',
+          backgroundColor: "#CED0CE",
+        }}
+      />
+    )
+  }
 
   return (
     <>
@@ -183,13 +195,14 @@ export default function homeScreenProp() {
                 </TableWrapper>
               </Table>
               <View style={styles.otherLectures}>
-                <Text style={styles.otherLectureTitle}>集中講義など</Text>
+                <Text style={styles.otherLectureTitle}>その他の講義</Text>
               </View>
             </View >
           }
           data={flatlistData}
           renderItem={renderItem}
           keyExtractor={item => item.時間割コード}
+          ItemSeparatorComponent={itemSeparator}
           ListFooterComponent={
             < TouchableOpacity style={styles.buttonsita}>
               <Text style={styles.buttomtext}>編集</Text>
@@ -244,9 +257,10 @@ const styles = StyleSheet.create({
   otherLectures: {
     alignItems: 'center',
     marginHorizontal: '2%',
-    marginBottom: '4%',
+    marginVertical: '2%',
   },
   otherLectureText: {
+    flex: 1,
     marginHorizontal: '5%',
     fontSize: 16,
   },
