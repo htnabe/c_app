@@ -2,42 +2,22 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
-// 教室名と棟名が空白の場合の処理
-function changeName(roomeName, buildingName,) {
-  if (roomeName == '' || buildingName == '') {
-    return '未定またはオンライン講義です';
-  }
-  else if (buildingName != '' && roomeName == '') {
-    return buildingName;
-  }
-  else if (buildingName == '' && roomeName != '') {
-    return roomeName;
-  }
-  else if (buildingName != '' && roomeName != '') {
-    return buildingName + '\n' + roomeName;
-  }
-};
-
 //授業詳細画面
 export default function classDetails({ navigation, lectureInfo }) {
   const { 科目 } = lectureInfo.params;
   const { 担当 } = lectureInfo.params;
   const { 教室名 } = lectureInfo.params;
-  const { 棟名 } = lectureInfo.params;
-  const { 棟 } = lectureInfo.params;
   const { 曜日時限 } = lectureInfo.params;
-  let displayedRoomName = '';
-
-  if (棟名 == undefined && 棟 != undefined) {
-    displayedRoomName = changeName(教室名, 棟);
-  }
-  else if (棟名 != undefined && 棟 == undefined) {
-    displayedRoomName = changeName(教室名, 棟名);
+  let balnkClass = null;
+  if (教室名 == '') {
+    balnkClass = '未定またはオンライン講義です';
+  } else {
+    balnkClass = 教室名;
   }
 
   //全角・半角空白除去処理
   let dayTime = null;
-  if (曜日時限.search(/..\s+/g) == true) {
+  if (曜日時限.search(/..\s+/g) != -1) {
     dayTime = 曜日時限.replace(/\s+/g, '');
   } else {
     dayTime = 曜日時限;
@@ -51,11 +31,12 @@ export default function classDetails({ navigation, lectureInfo }) {
     classDayTime = dayTime.split('・')
   }
 
-  //曜日時限 表示 （↓の処理はもっと簡潔にしてください）
+  //曜日時限 表示
   let showDayTime = null;
   const DaytimeLength = classDayTime.length;
-  if (曜日時限 == '他') {
-    showDayTime = '他';
+  if (曜日時限 == '他' || 曜日時限.match('Thursday')) {
+    //Tursday処理
+    showDayTime = 曜日時限;
   } else if (DaytimeLength == 2) {
     const dayTime_1 = classDayTime[0] + 'コマ';
     const dayTime_2 = classDayTime[1] + 'コマ';
@@ -107,10 +88,8 @@ export default function classDetails({ navigation, lectureInfo }) {
           <Text style={styles.classTapText}>{showDayTime}</Text>
         </View>
         <View style={styles.classTapframe}>
-          <Text style={styles.classTapHeader}>棟名・教室名</Text>
-          <View style={styles.buildingRoom}>
-            <Text style={styles.classTapText}>{displayedRoomName}</Text>
-          </View>
+          <Text style={styles.classTapHeader}>教室名</Text>
+          <Text style={styles.classTapText}>{balnkClass}</Text>
         </View>
         <View style={styles.ctTuikaContainer}>
           <TouchableOpacity style={styles.ctTuikaBtn} onPress={() => navigation.goBack()}>
@@ -149,9 +128,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
     backgroundColor: '#e6f2f5',
     color: 'black',
-  },
-  buildingRoom: {
-    marginTop: '2%'
   },
   // 追加ボタン関連
   ctTuikaContainer: {
