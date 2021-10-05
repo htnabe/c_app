@@ -7,6 +7,7 @@ import SearchResult from './screens/searchResult';
 import ClassDetails from './screens/classDetails';
 import LectureScreen from './screens/lectureScreen'
 import HomeLectureDetail from './screens/homeLectureDetail';
+import EditLectureScreen from './screens/editLectureScreen';
 
 // ナビゲーションの宣言
 const Stack = createNativeStackNavigator();
@@ -35,14 +36,20 @@ function classDetailScreen({ route }) {
   return <ClassDetails navigation={navigation} lectureInfo={ route }/>
 };
 
+function editScreen() {
+  const navigation = useNavigation();
+  return <EditLectureScreen navigation={navigation} />
+};
+
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home_Screen">
-        <Stack.Screen name="Home_Screen" component={lectureHome} />
-        <Stack.Screen name="Home_LectureInfo" component={lectureHomeDetail} />
-        <Stack.Screen name="Search_Screen" component={searchResultScreen} />
-        <Stack.Screen name="Classtap_Screen" component={classDetailScreen} />
+      <Stack.Navigator initialRouteName="時間割表">
+        <Stack.Screen name="時間割表" component={lectureHome} />
+        <Stack.Screen name="講義詳細" component={lectureHomeDetail} />
+        <Stack.Screen name="編集画面" component={editScreen} />
+        <Stack.Screen name="検索結果" component={searchResultScreen} />
+        <Stack.Screen name="講義の詳細" component={classDetailScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -51,7 +51,7 @@ export default function searchScreen() {
 
   const renderItem = ({ item }) => (
     <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-      <TouchableHighlight style={{ width: '80%' }} onPress={() => navigation.navigate("Classtap_Screen", item)}>
+      <TouchableHighlight style={{ width: '80%' }} onPress={() => navigation.navigate("講義の詳細", item)}>
         <Item 科目={item.科目} 担当={item.担当} />
       </TouchableHighlight>
       <View style={{ borderWidth: 1, borderColor: '#dcdcdc', width: '100%', height: '100%' }}>
@@ -88,7 +88,7 @@ export default function searchScreen() {
       else {
         selectedLectures = await DeleteDuplicateLecture(selectedLectures);
         await saveData(['tableKey', selectedLectures]);
-        navigation.navigate('Home_Screen');
+        navigation.navigate('時間割表');
       }
     }
   }

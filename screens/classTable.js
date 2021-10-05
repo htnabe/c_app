@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { Table, Row, Cols, TableWrapper, Col } from 'react-native-table-component';
-import { StyleSheet, View, Text, TouchableOpacity, TouchableHighlight } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { readTableData } from '../holddeta/ReadTableData';
 
@@ -29,7 +29,7 @@ export default function homeScreenProp() {
     // lectureDataは配列
     const lectureData = selectedLectures.filter(item => item.科目 == lectureName);
     return (
-      <TouchableOpacity onPress={() => navigation.navigate("Home_LectureInfo", lectureData[0])}>
+      <TouchableOpacity onPress={() => navigation.navigate("講義詳細", lectureData[0])}>
         <Text>{lectureName}</Text>
       </TouchableOpacity>
     );
@@ -155,7 +155,7 @@ export default function homeScreenProp() {
 
   const renderItem = ({ item }) => (
     <View style={{ alignItems: 'center', marginBottom: '2%' }}>
-      <TouchableOpacity style={{ width: '95%', marginBottom: '1%', }} onPress={() => navigation.navigate("Classtap_Screen", item)}>
+      <TouchableOpacity style={{ width: '95%', marginBottom: '1%', }} onPress={() => navigation.navigate("講義の詳細", item)}>
         <View style={{ flexDirection: 'row', flex: 1, }}>
           <Text style={styles.otherLectureText}>{item.科目}</Text>
           <Text style={styles.otherLectureText}>{item.担当}</Text>
@@ -204,8 +204,8 @@ export default function homeScreenProp() {
           keyExtractor={item => item.時間割コード}
           ItemSeparatorComponent={itemSeparator}
           ListFooterComponent={
-            < TouchableOpacity style={styles.buttonsita}>
-              <Text style={styles.buttomtext}>編集</Text>
+            < TouchableOpacity style={styles.buttonsita} onPress={() => navigation.navigate("編集画面")}>
+              <Text style={styles.buttomtext}>講義の削除・編集</Text>
             </TouchableOpacity>
           }
         />
@@ -271,12 +271,12 @@ const styles = StyleSheet.create({
   // ボタンデザイン
   buttomtext: {
     textAlign: 'center',
+    color: '#4682b4',
     fontSize: 20,
   },
   buttonsita: {
     marginBottom: '2%',
     marginHorizontal: '5%',
-    width: '40%',
     backgroundColor: '#d7e0ff',
     borderRadius: 10,
     borderColor: '#dcdcdc',

@@ -5,7 +5,9 @@ function importJsonFiles(lectureFileName) {
   lectureFileName = lectureFileName.replace(/"/g, '');
   lectureFileName = lectureFileName.trim();
   let data;
+
   try {
+
     // 文字列を動的に変化させてrequireすることは不可能なので仕方なくswitch文
     switch (lectureFileName) {
       case '総合理工':
@@ -57,6 +59,18 @@ function importJsonFiles(lectureFileName) {
 
 // インプットされた文字と学部名から特定の講義を検索
 const searchLecture = async (inputedKeyWord) => {
+  let keyWords = inputedKeyWord.split(' ');
+
+  // 複数のキーワード検索を行う
+  if (keyWords[0] == inputedKeyWord) {
+    keyWords = inputedKeyWord.split('　');
+    if (keyWords[0] == inputedKeyWord) {
+
+      // 空白でキーワードが分割されない場合
+      keyWords = keyWords[0]
+    }
+  }
+
   try {
     let readFacultyInfo =  await ReadData('facultyName');
 
@@ -71,11 +85,15 @@ const searchLecture = async (inputedKeyWord) => {
     readFileName.shift();
     let lectureData = [];
     let lectureFile;
+
+    // for.. of 内ではawait処理を行える
     for (const fileName of readFileName) {
       lectureFile = importJsonFiles(fileName);
-      lectureFile = await lectureFile.filter(function (item) {
-        return item.科目.match(inputedKeyWord) || item.担当.match(inputedKeyWord);
-      })
+      for (const word of keyWords) {
+        lectureFile = await lectureFile.filter(function (item) {
+          return item.科目.match(word) || item.担当.match(word);
+        })
+      }
       for (let lectureNumber = 0; lectureNumber < lectureFile.length; lectureNumber++) {
         lectureData.push(lectureFile[lectureNumber]);
       }

@@ -37,7 +37,7 @@ export default function lectureScreen({ navigation }) {
         <TouchableOpacity
           style={styles.buttoncontainer}
           onPress={() => {
-            navigation.navigate('Search_Screen', { keyWord: inputedKeyWord});
+            navigation.navigate('検索結果', { keyWord: inputedKeyWord});
           }}
         >
           <Text style={styles.kensakutext}>検索</Text>
